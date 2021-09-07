@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.5" minHeight="583.0" minWidth="865.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.WeatherViewController">
+<SplitPane dividerPositions="0.5" minHeight="583.0" minWidth="865.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.WeatherViewController">
   <items>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>

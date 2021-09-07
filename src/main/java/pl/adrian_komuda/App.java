@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import pl.adrian_komuda.views.ViewFactory;
 
 import java.io.IOException;
 
@@ -20,25 +21,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        mainView = (BorderPane) loadFXML("MainView");
-        SplitPane weatherView = (SplitPane) loadFXML("WeatherView");
-        mainView.setCenter(weatherView);
-
-        scene = new Scene(mainView);
-        stage.setScene(scene);
-        stage.setMinWidth(865);
-        stage.setMinHeight(583);
-        stage.setMaximized(true);
-        stage.show();
-    }
-
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    public static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("views/fxml/" + fxml + ".fxml"));
-        return fxmlLoader.load();
+        ViewFactory.showMainWindow();
     }
 
     public static void main(String[] args) {
