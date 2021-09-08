@@ -1,28 +1,10 @@
 package pl.adrian_komuda.controllers;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
-import pl.adrian_komuda.App;
 import pl.adrian_komuda.views.ViewFactory;
 
-import java.io.IOException;
-
 public class MainViewController {
-
-    @FXML
-    private BorderPane borderPane;
-
-    @FXML
-    void mainMenuAddCityAction() {
-        ViewFactory.changeToAddCityView();
-    }
-
-    @FXML
-    void mainMenuDeleteCityAction() {
-        ViewFactory.changeToDeleteCityView();
-    }
 
     @FXML
     public void mainMenuCloseAction() {
@@ -31,17 +13,27 @@ public class MainViewController {
     }
 
     @FXML
+    void mainMenuAboutAction() {
+        ViewFactory.showAbout();
+    }
+
+    @FXML
     void leftPanelButtonAddCityOnAction() {
-        ViewFactory.changeToAddCityView();
+        ViewFactory.switchCenterViewToAddCityView();
     }
 
     @FXML
     void leftPanelButtonDeleteCityOnAction() {
-        ViewFactory.changeToDeleteCityView();
+        ViewFactory.switchCenterViewToDeleteCityView();
     }
 
     @FXML
     void leftPanelButtonWeatherOnAction() {
-        ViewFactory.changeToWeatherView();
+        ViewFactory.switchCenterViewToWeatherView();
+    }
+
+    @FXML
+    void leftPanelButtonOptionsOnAction() {
+        ViewFactory.switchCenterViewToOptions();
     }
 }

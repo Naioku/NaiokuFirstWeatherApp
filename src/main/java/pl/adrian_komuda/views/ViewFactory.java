@@ -3,9 +3,9 @@ package pl.adrian_komuda.views;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import pl.adrian_komuda.App;
 
 import java.io.IOException;
@@ -27,23 +27,36 @@ public class ViewFactory {
     }
 
     public static void showMainWindow() {
-        changeToWeatherView();
+        switchCenterViewToWeatherView();
         STAGE.setScene(SCENE);
-        STAGE.setMinWidth(865);
+        STAGE.setMinWidth(995);
         STAGE.setMinHeight(583);
         STAGE.setMaximized(false);
         STAGE.show();
     }
 
-    public static void changeToWeatherView() {
+    public static void switchCenterViewToWeatherView() {
         MAIN_VIEW.setCenter(loadFXML("WeatherView"));
     }
 
-    public static void changeToAddCityView() {
+    public static void switchCenterViewToAddCityView() {
         MAIN_VIEW.setCenter(loadFXML("AddCityView"));
     }
 
-    public static void changeToDeleteCityView() {
+    public static void switchCenterViewToDeleteCityView() {
         MAIN_VIEW.setCenter(loadFXML("DeleteCityView"));
+    }
+
+    public static void switchCenterViewToOptions() {
+        MAIN_VIEW.setCenter(loadFXML("OptionsView"));
+    }
+
+    public static void showAbout() {
+        Stage aboutStage = new Stage();
+        Scene aboutScene = new Scene(loadFXML("AboutView"));
+        aboutStage.setScene(aboutScene);
+        aboutStage.setResizable(false);
+        aboutStage.initStyle(StageStyle.UTILITY);
+        aboutStage.show();
     }
 }
