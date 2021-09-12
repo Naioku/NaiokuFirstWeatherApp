@@ -26,3 +26,4 @@ target/*
 out/*
 .idea/artifact/*
 src/main/java/pl/adrian_komuda/Config.java
+src/main/java/pl/adrian_komuda/Debug.java

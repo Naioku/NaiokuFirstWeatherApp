@@ -15,7 +15,7 @@ module pl.adrian_komuda {
     opens pl.adrian_komuda;
     opens pl.adrian_komuda.controllers;
     opens pl.adrian_komuda.weather_client;
-    opens pl.adrian_komuda.weather_client.dto;
+    opens pl.adrian_komuda.weather_client.data_transfer_objects;
     exports pl.adrian_komuda;
 
 }

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -10,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.5" minHeight="583.0" minWidth="865.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.WeatherViewController">
+<SplitPane dividerPositions="0.5" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="944.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.WeatherViewController">
   <items>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
@@ -42,17 +46,22 @@
                   </HBox>
                </children>
             </VBox>
-            <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER">
+               <children>
+                  <Label text="Current" />
+               </children>
+            </VBox>
+            <GridPane alignment="CENTER">
               <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="70.0">
+                  <VBox alignment="TOP_CENTER">
                      <children>
                         <Label text="Temperature" />
                         <Label fx:id="temperatureValueLabel" text="Value" />
@@ -61,7 +70,7 @@
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                      </padding>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="70.0" GridPane.columnIndex="1">
+                  <VBox alignment="TOP_CENTER" GridPane.columnIndex="1">
                      <children>
                         <Label text="Pressure" />
                         <Label fx:id="pressureValueLabel" text="Value" />
@@ -70,7 +79,7 @@
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                      </padding>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="70.0" GridPane.rowIndex="1">
+                  <VBox alignment="TOP_CENTER" GridPane.rowIndex="1">
                      <children>
                         <Label text="Humidity" />
                         <Label fx:id="humidityValueLabel" text="Value" />
@@ -79,7 +88,7 @@
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                      </padding>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <VBox alignment="TOP_CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
                         <Label text="Wind speed" />
                         <Label fx:id="windSpeedValueLabel" text="Value" />
@@ -90,6 +99,27 @@
                   </VBox>
                </children>
             </GridPane>
+            <ScrollPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="180.0" prefWidth="468.0" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="hourlyWeatherGridPaneVbox" alignment="CENTER">
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <BarChart fx:id="hourlyWeatherChart" animated="false" VBox.vgrow="ALWAYS">
+                    <xAxis>
+                      <CategoryAxis />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+               </children>
+            </VBox>
          </children>
       </VBox>
       <VBox>

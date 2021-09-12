@@ -29,8 +29,8 @@ public class ViewFactory {
     public static void showMainWindow() {
         switchCenterViewToWeatherView();
         STAGE.setScene(SCENE);
-        STAGE.setMinWidth(995);
-        STAGE.setMinHeight(583);
+        STAGE.setMinWidth(1124);
+        STAGE.setMinHeight(700);
         STAGE.setMaximized(false);
         STAGE.show();
     }
