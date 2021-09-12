@@ -32,16 +32,13 @@ public class WeatherViewController implements Initializable {
     private final ObservableList<City> citiesList = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox<?> homeCountry;
+    private Label headerLabel;
 
     @FXML
-    private ChoiceBox<City> homeCity;
+    private ChoiceBox<?> countryChoiceBox;
 
     @FXML
-    private ChoiceBox<?> chosenCountry;
-
-    @FXML
-    private ChoiceBox<?> chosenCity;
+    private ChoiceBox<City> cityChoiceBox;
 
     @FXML
     private Label temperatureValueLabel;
@@ -64,8 +61,8 @@ public class WeatherViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUpHomeCities();
-        showCurrentWeatherForCity(homeCity.getValue().getName());
-        showHourlyWeather(homeCity.getValue().getName());
+        showCurrentWeatherForCity(cityChoiceBox.getValue().getName());
+        showHourlyWeather(cityChoiceBox.getValue().getName());
         setUpChangeHomeCityChoiceBoxListener();
     }
 
@@ -78,7 +75,7 @@ public class WeatherViewController implements Initializable {
     }
 
     private void setUpChangeHomeCityChoiceBoxListener() {
-        homeCity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        cityChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
                 String newCityName = citiesList.get(newIndex.intValue()).getName();
@@ -95,8 +92,8 @@ public class WeatherViewController implements Initializable {
         citiesList.add(weatherClient.getCityInfo("Tokyo"));
         citiesList.add(weatherClient.getCityInfo("London"));
 
-        homeCity.setItems(citiesList);
-        homeCity.setValue(citiesList.get(0));
+        cityChoiceBox.setItems(citiesList);
+        cityChoiceBox.setValue(citiesList.get(0));
     }
 
     private void showHourlyWeather(String cityName) {
