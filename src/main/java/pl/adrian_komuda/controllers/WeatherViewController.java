@@ -17,25 +17,22 @@ import javafx.scene.layout.*;
 
 import javafx.scene.paint.Paint;
 import pl.adrian_komuda.HelpingMethods;
-import pl.adrian_komuda.model.City;
-import pl.adrian_komuda.model.HourlyWeatherDto;
-import pl.adrian_komuda.model.WeatherDto;
+import pl.adrian_komuda.model.*;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class WeatherViewController implements Initializable {
     private final WeatherClient weatherClient = new WeatherClient();
-    private final ObservableList<City> citiesList = FXCollections.observableArrayList();
+    private ObservableList<String> countriesList = FXCollections.observableArrayList();
+    private final Map<String, ObservableList<City>> countiesCitiesMap = new HashMap<>();
 
     @FXML
     private Label headerLabel;
 
     @FXML
-    private ChoiceBox<?> countryChoiceBox;
+    private ChoiceBox<String> countryChoiceBox;
 
     @FXML
     private ChoiceBox<City> cityChoiceBox;
@@ -60,10 +57,35 @@ public class WeatherViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setUpHomeCities();
-        showCurrentWeatherForCity(cityChoiceBox.getValue().getName());
-        showHourlyWeather(cityChoiceBox.getValue().getName());
-        setUpChangeHomeCityChoiceBoxListener();
+        setUpCities();
+        setUpChangeCityChoiceBoxListener();
+        setUpChangeCountryChoiceBoxListener();
+    }
+
+    private void setUpCities() {
+        // Cities' list
+        ObservableList<City> polishCities = FXCollections.observableArrayList();
+        polishCities.add(weatherClient.getCityInfo("Plock"));
+        polishCities.add(weatherClient.getCityInfo("Warsaw"));
+
+        ObservableList<City> japaneseCities = FXCollections.observableArrayList();
+        japaneseCities.add(weatherClient.getCityInfo("Tokyo"));
+        japaneseCities.add(weatherClient.getCityInfo("Osaka"));
+
+        ObservableList<City> britishCities = FXCollections.observableArrayList();
+        britishCities.add(weatherClient.getCityInfo("London"));
+
+        // Binding cities to countries
+        countiesCitiesMap.put("Poland", polishCities);
+        countiesCitiesMap.put("Japan", japaneseCities);
+        countiesCitiesMap.put("GB", britishCities);
+
+        // Getting countries' list
+        countriesList.addAll(countiesCitiesMap.keySet());
+        countriesList = countriesList.sorted();
+
+        // Adding to choice boxes
+        countryChoiceBox.setItems(countriesList);
     }
 
     private void showCurrentWeatherForCity(String city) {
@@ -74,11 +96,14 @@ public class WeatherViewController implements Initializable {
         windSpeedValueLabel.setText(currentWeatherForCity.getWindSpeed() + " " + currentWeatherForCity.getWindSpeedUnit());
     }
 
-    private void setUpChangeHomeCityChoiceBoxListener() {
+    private void setUpChangeCityChoiceBoxListener() {
         cityChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
-                String newCityName = citiesList.get(newIndex.intValue()).getName();
+                if (newIndex.intValue() < 0) return;
+
+                String activeCountry = countryChoiceBox.getValue();
+                String newCityName = countiesCitiesMap.get(activeCountry).get(newIndex.intValue()).getName();
 
                 showCurrentWeatherForCity(newCityName);
                 showHourlyWeather(newCityName);
@@ -86,14 +111,16 @@ public class WeatherViewController implements Initializable {
         });
     }
 
-    private void setUpHomeCities() {
-        citiesList.add(weatherClient.getCityInfo("Plock"));
-        citiesList.add(weatherClient.getCityInfo("Warsaw"));
-        citiesList.add(weatherClient.getCityInfo("Tokyo"));
-        citiesList.add(weatherClient.getCityInfo("London"));
+    private void setUpChangeCountryChoiceBoxListener() {
+        countryChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
+                String newCountryName = countriesList.get(newIndex.intValue());
+                ObservableList<City> newCitiesList = countiesCitiesMap.get(newCountryName);
 
-        cityChoiceBox.setItems(citiesList);
-        cityChoiceBox.setValue(citiesList.get(0));
+                cityChoiceBox.setItems(newCitiesList);
+            }
+        });
     }
 
     private void showHourlyWeather(String cityName) {
@@ -168,6 +195,7 @@ public class WeatherViewController implements Initializable {
         XYChart.Series uviSeries = new XYChart.Series();
         temperatureSeries.setName("Temperature");
         uviSeries.setName("UVI");
+        hourlyWeatherChart.getYAxis().setLabel("°C/uvi");
 
         int i = 0;
         while (i < quantityOfHourlyRecords) {
@@ -179,11 +207,14 @@ public class WeatherViewController implements Initializable {
             i++;
         }
         hourlyWeatherChart.getData().clear();
+        hourlyWeatherChart.layout();
         hourlyWeatherChart.getData().addAll(temperatureSeries, uviSeries);
     }
 
     private City findCityByName(String cityName) {
-        for (City cityObj : citiesList) {
+        String activeCountry = countryChoiceBox.getValue();
+        ObservableList<City> activeCitiesList = countiesCitiesMap.get(activeCountry);
+        for (City cityObj : activeCitiesList) {
             if (cityName.equals(cityObj.getName())) return cityObj;
         }
         return null;

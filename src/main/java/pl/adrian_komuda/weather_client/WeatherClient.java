@@ -6,10 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.springframework.web.client.RestTemplate;
 import pl.adrian_komuda.Config;
-import pl.adrian_komuda.model.City;
-import pl.adrian_komuda.model.HourlyWeatherDto;
+import pl.adrian_komuda.model.*;
 import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherGeocodingCityDto;
-import pl.adrian_komuda.model.WeatherDto;
 import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherHourlyDto;
 import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherOneCallDto;
 import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherWeatherDto;
@@ -63,13 +61,14 @@ public class WeatherClient {
         try {
             OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
             for (OpenWeatherHourlyDto openWeatherDto : openWeatherOneCallDto.getHourly()) {
-                HourlyWeatherDto hourlyWeatherDto = new HourlyWeatherDto();
-
-                hourlyWeatherDto.setDateTime(openWeatherDto.getDt());
-                hourlyWeatherDto.setTemperature(openWeatherDto.getTemp());
-                hourlyWeatherDto.setUvi(openWeatherDto.getUvi());
-                hourlyWeatherDto.setDescription(openWeatherDto.getDescription());
-                hourlyWeatherDto.setIcon(openWeatherDto.getIcon());
+                HourlyWeatherDto hourlyWeatherDto = new HourlyWeatherDto(
+                        openWeatherDto.getDt(),
+                        openWeatherOneCallDto.getTimezone_offset(),
+                        openWeatherDto.getTemp(),
+                        openWeatherDto.getUvi(),
+                        openWeatherDto.getDescription(),
+                        openWeatherDto.getIcon()
+                );
 
                 hourlyWeatherDtos.add(hourlyWeatherDto);
             }
@@ -90,7 +89,7 @@ public class WeatherClient {
                 Config.API_KEY
         );
 
-        City cityObj = new City();
+        City cityObj = new SpecificCity();
 
         try {
             OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
@@ -100,6 +99,7 @@ public class WeatherClient {
 
         } catch (JsonProcessingException e) {
             System.out.println("Error in converting json to object!");
+            cityObj = new EmptyCity();
             e.printStackTrace();
         }
 

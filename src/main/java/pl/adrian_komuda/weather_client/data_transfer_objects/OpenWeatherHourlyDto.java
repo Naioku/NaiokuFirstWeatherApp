@@ -2,7 +2,6 @@ package pl.adrian_komuda.weather_client.data_transfer_objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pl.adrian_komuda.Debug;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenWeatherHourlyDto {

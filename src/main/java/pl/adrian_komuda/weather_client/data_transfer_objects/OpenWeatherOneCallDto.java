@@ -9,7 +9,14 @@ public class OpenWeatherOneCallDto {
     @JsonProperty("hourly")
     private OpenWeatherHourlyDto[] hourly;
 
+    @JsonProperty("timezone_offset")
+    private long timezone_offset;
+
     public OpenWeatherHourlyDto[] getHourly() {
         return hourly;
+    }
+
+    public long getTimezone_offset() {
+        return timezone_offset;
     }
 }

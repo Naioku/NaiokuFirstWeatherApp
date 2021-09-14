@@ -3,28 +3,75 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" fillWidth="false" spacing="20.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.DeleteCityViewController">
-   <children>
-      <Label text="Adding a new city...">
-         <VBox.margin>
-            <Insets bottom="30.0" />
-         </VBox.margin>
-      </Label>
-      <VBox alignment="CENTER" spacing="5.0">
+
+<BorderPane prefHeight="559.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.DeleteCityViewController">
+   <center>
+      <VBox alignment="CENTER">
          <children>
-            <Label text="Country" />
-            <TextField />
+            <HBox alignment="CENTER" spacing="100.0">
+               <children>
+                  <VBox alignment="CENTER" fillWidth="false" spacing="20.0">
+                     <children>
+                        <Label text="Add a new city...">
+                           <VBox.margin>
+                              <Insets bottom="30.0" />
+                           </VBox.margin>
+                        </Label>
+                        <VBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <Label text="Country" />
+                              <TextField />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <Label text="City" />
+                              <TextField />
+                           </children>
+                        </VBox>
+                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="88.0" text="Add">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" fillWidth="false" spacing="20.0">
+                     <children>
+                        <Label text="Delete selected above item">
+                           <VBox.margin>
+                              <Insets bottom="30.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Button mnemonicParsing="false" prefHeight="55.0" prefWidth="63.0" text="Delete" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </HBox>
          </children>
       </VBox>
-      <VBox alignment="CENTER" spacing="5.0">
-         <children>
-            <Label text="City" />
-            <TextField />
-         </children>
-      </VBox>
-      <Button mnemonicParsing="false" text="Add" />
-   </children>
-</VBox>
+   </center>
+   <top>
+      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="75.0" text="City" />
+          <TableColumn prefWidth="75.0" text="Latitude" />
+            <TableColumn prefWidth="75.0" text="Longitude" />
+        </columns>
+      </TableView>
+   </top>
+   <left>
+      <TreeView fx:id="treeView" minHeight="355.0" minWidth="206.0" BorderPane.alignment="CENTER" />
+   </left>
+</BorderPane>

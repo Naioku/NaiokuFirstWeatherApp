@@ -7,43 +7,31 @@ public class HourlyWeatherDto {
     private String description = "";
     private String icon = "";
 
-    public long getDateTime() {
-        return dateTime;
+    public HourlyWeatherDto(long dateTime, long dateTimeOffset, float temperature, int uvi, String description, String icon) {
+        this.dateTime = dateTime + dateTimeOffset;
+        this.temperature = Math.round(temperature);
+        this.uvi = uvi;
+        this.description = description;
+        this.icon = icon;
     }
 
-    public void setDateTime(long dateTime) {
-        this.dateTime = dateTime;
+    public long getDateTime() {
+        return dateTime;
     }
 
     public int getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
-        this.temperature = Math.round(temperature);
-    }
-
     public int getUvi() {
         return uvi;
-    }
-
-    public void setUvi(int uvi) {
-        this.uvi = uvi;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getIcon() {
         return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 }
