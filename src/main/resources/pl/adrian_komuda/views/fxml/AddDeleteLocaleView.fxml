@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane prefHeight="559.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.DeleteCityViewController">
+<BorderPane prefHeight="559.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.AddDeleteLocaleViewController">
    <center>
       <VBox alignment="CENTER">
          <children>
@@ -28,16 +27,16 @@
                         <VBox alignment="CENTER" spacing="5.0">
                            <children>
                               <Label text="Country" />
-                              <TextField />
+                              <TextField fx:id="countryTextField" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" spacing="5.0">
                            <children>
                               <Label text="City" />
-                              <TextField />
+                              <TextField fx:id="cityTextField" />
                            </children>
                         </VBox>
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="88.0" text="Add">
+                        <Button mnemonicParsing="false" onAction="#addLocaleAction" prefHeight="30.0" prefWidth="88.0" text="Add">
                            <VBox.margin>
                               <Insets top="10.0" />
                            </VBox.margin>
@@ -51,7 +50,7 @@
                               <Insets bottom="30.0" />
                            </VBox.margin>
                         </Label>
-                        <Button mnemonicParsing="false" prefHeight="55.0" prefWidth="63.0" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#deleteLocaleAction" prefHeight="55.0" prefWidth="63.0" text="Delete" />
                      </children>
                   </VBox>
                </children>
@@ -72,6 +71,14 @@
       </TableView>
    </top>
    <left>
-      <TreeView fx:id="treeView" minHeight="355.0" minWidth="206.0" BorderPane.alignment="CENTER" />
+      <TreeView fx:id="treeView" minHeight="355.0" minWidth="150.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
    </left>
+   <bottom>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Status: " />
+            <Label fx:id="errorLabel" text="FINE" />
+         </children>
+      </HBox>
+   </bottom>
 </BorderPane>

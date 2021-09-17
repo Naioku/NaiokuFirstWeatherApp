@@ -106,6 +106,32 @@ public class WeatherClient {
         return cityObj;
     }
 
+    public City getCityInfo(String city, String countryISOCode) {
+        String jsonResponse = restTemplate.getForObject(
+                GEO_URL + "direct?q={city},{countryCode}&appid={apiKey}",
+                String.class,
+                city,
+                countryISOCode,
+                Config.API_KEY
+        );
+
+        City cityObj = new SpecificCity();
+
+        try {
+            OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
+            cityObj.setName(city);
+            cityObj.setLatitude(openWeatherGeocodingCityDto[0].getLat());
+            cityObj.setLongitude(openWeatherGeocodingCityDto[0].getLon());
+
+        } catch (JsonProcessingException e) {
+            System.out.println("Error in converting json to object!");
+            cityObj = new EmptyCity();
+            e.printStackTrace();
+        }
+
+        return cityObj;
+    }
+
     public ImageView getWeatherIcon(String code) {
         return new ImageView(new Image("http://openweathermap.org/img/wn/" + code + "@2x.png"));
     }

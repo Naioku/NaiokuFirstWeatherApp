@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import pl.adrian_komuda.App;
-import pl.adrian_komuda.Debug;
 
 import java.io.IOException;
 
@@ -80,12 +79,8 @@ public class ViewFactory {
         return null;
     }
 
-    public static void switchCenterViewToAddCityView() {
-        MAIN_VIEW.setCenter(loadFXML("AddCityView"));
-    }
-
-    public static void switchCenterViewToDeleteCityView() {
-        MAIN_VIEW.setCenter(loadFXML("DeleteCityView"));
+    public static void switchCenterViewToAddDeleteLocaleView() {
+        MAIN_VIEW.setCenter(loadFXML("AddDeleteLocaleView"));
     }
 
     public static void switchCenterViewToOptions() {

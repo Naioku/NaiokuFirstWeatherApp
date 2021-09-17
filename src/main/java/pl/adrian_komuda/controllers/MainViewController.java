@@ -1,6 +1,7 @@
 package pl.adrian_komuda.controllers;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import pl.adrian_komuda.views.ViewFactory;
 
@@ -18,13 +19,8 @@ public class MainViewController {
     }
 
     @FXML
-    void leftPanelButtonAddCityOnAction() {
-        ViewFactory.switchCenterViewToAddCityView();
-    }
-
-    @FXML
-    void leftPanelButtonDeleteCityOnAction() {
-        ViewFactory.switchCenterViewToDeleteCityView();
+    void leftPanelButtonAddDeleteLocaleOnAction() {
+        ViewFactory.switchCenterViewToAddDeleteLocaleView();
     }
 
     @FXML
