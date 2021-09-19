@@ -13,8 +13,13 @@
 
 <BorderPane prefHeight="559.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.AddDeleteLocaleViewController">
    <center>
-      <VBox alignment="CENTER">
+      <VBox alignment="TOP_CENTER">
          <children>
+            <HBox>
+               <children>
+                  <Button mnemonicParsing="false" onAction="#refreshAction" text="Refresh" />
+               </children>
+            </HBox>
             <HBox alignment="CENTER" spacing="100.0">
                <children>
                   <VBox alignment="CENTER" fillWidth="false" spacing="20.0">

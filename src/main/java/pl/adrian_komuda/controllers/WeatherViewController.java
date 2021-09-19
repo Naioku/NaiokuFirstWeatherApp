@@ -26,7 +26,7 @@ import java.util.*;
 public class WeatherViewController implements Initializable {
     private final WeatherClient weatherClient = new WeatherClient();
     private ObservableList<String> countriesList = FXCollections.observableArrayList();
-    private final Map<String, ObservableList<City>> countiesCitiesMap = new HashMap<>();
+    private final Map<String, ObservableList<City>> countiesCitiesMap = CustomLocales.getCountriesCitiesMap();
 
     @FXML
     private Label headerLabel;
@@ -63,23 +63,6 @@ public class WeatherViewController implements Initializable {
     }
 
     private void setUpCities() {
-        // Cities' list
-        ObservableList<City> polishCities = FXCollections.observableArrayList();
-        polishCities.add(weatherClient.getCityInfo("Plock"));
-        polishCities.add(weatherClient.getCityInfo("Warsaw"));
-
-        ObservableList<City> japaneseCities = FXCollections.observableArrayList();
-        japaneseCities.add(weatherClient.getCityInfo("Tokyo"));
-        japaneseCities.add(weatherClient.getCityInfo("Osaka"));
-
-        ObservableList<City> britishCities = FXCollections.observableArrayList();
-        britishCities.add(weatherClient.getCityInfo("London"));
-
-        // Binding cities to countries
-        countiesCitiesMap.put("Poland", polishCities);
-        countiesCitiesMap.put("Japan", japaneseCities);
-        countiesCitiesMap.put("GB", britishCities);
-
         // Getting countries' list
         countriesList.addAll(countiesCitiesMap.keySet());
         countriesList = countriesList.sorted();
@@ -117,6 +100,7 @@ public class WeatherViewController implements Initializable {
             public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
                 String newCountryName = countriesList.get(newIndex.intValue());
                 ObservableList<City> newCitiesList = countiesCitiesMap.get(newCountryName);
+                //newCitiesList = newCitiesList.sorted();
 
                 cityChoiceBox.setItems(newCitiesList);
             }

@@ -1,7 +1,6 @@
 package pl.adrian_komuda.controllers;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import pl.adrian_komuda.views.ViewFactory;
 

@@ -1,33 +1,36 @@
 package pl.adrian_komuda.model;
 
 import javafx.collections.*;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CustomLocales {
-    private final TreeView<String> treeView;
-    private final ObservableMap<String, ObservableList<City>> countriesCitiesMap = FXCollections.observableMap(new HashMap<>());
+    private static final ObservableMap<String, ObservableList<City>> countriesCitiesMap = FXCollections.observableMap(new HashMap<>());
 
-    public CustomLocales(TreeView<String> treeView) {
-        this.treeView = treeView;
-        addCountriesCitiesMapChangeListener();
+    /**
+     * First method You need to run.
+     * @param treeView - treeView object to upload.
+     */
+    public static void initializeCustomLocales(TreeView<String> treeView) {
+        addCountriesCitiesMapChangeListener(treeView);
+        refreshTreeView(treeView);
     }
 
-    public void addLocale(String country, City city) {
+    public static void addLocale(TreeView<String> treeView, String country, City city) {
         ObservableList<City> cities = countriesCitiesMap.get(country);
 
         if (cities == null) {
             cities = FXCollections.observableArrayList();
-            addCitiesListChangeListener(cities);
+            addCitiesListChangeListener(treeView, cities);
         }
         cities.add(city);
         countriesCitiesMap.put(country, cities);
     }
 
-    public void deleteLocale() {
+    public static void deleteLocale(TreeView<String> treeView) {
         TreeItem<String> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
 
         if (selectedTreeItem.getChildren().isEmpty()) {
@@ -38,53 +41,83 @@ public class CustomLocales {
         }
     }
 
-    // ======= COUNTRY LISTENER START ======= \\
-    private void addCountriesCitiesMapChangeListener() {
-        countriesCitiesMap.addListener(new MapChangeListener<String, ObservableList<City>>() {
-            @Override
-            public void onChanged(Change<? extends String, ? extends ObservableList<City>> change) {
-                // Works only when You add something to map or delete a record. (not add to list which is a value in map)
-                if (change.wasAdded()) addCountryWithCitiesToTheTreeView(change);
-                else if (change.wasRemoved()) removeCountryFromTheTreeView();
-            }
-        });
-    }
+    public static void refreshTreeView(TreeView<String> treeView) {
+        TreeItem<String> root = getRootFromTreeView(treeView);
+        ObservableList<TreeItem<String>> countryTreeItemsList = root.getChildren();
+        countryTreeItemsList.clear();
 
-    private void removeCountryFromTheTreeView() {
-        TreeItem<String> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
-        selectedTreeItem.getParent().getChildren().remove(selectedTreeItem);
-    }
+        List<String> countriesList = new ArrayList<>(countriesCitiesMap.keySet());
+        Collections.sort(countriesList);
 
-    private void addCountryWithCitiesToTheTreeView(MapChangeListener.Change<? extends String,? extends ObservableList<City>> change) {
-        TreeItem<String> root = treeView.getRoot();
-        if (root == null) {
-            root = new TreeItem<>("Root");
+        for (String country : countriesList) {
+            addCountryWithCitiesToTheTreeView(treeView, country, countriesCitiesMap.get(country).sorted(), root);
         }
-        addNewRecordToRoot(change.getKey(), change.getValueAdded(), root);
+    }
+
+    private static void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities, TreeItem<String> root) {
+        addNewRecordToRoot(country, cities, root);
         treeView.setRoot(root);
         treeView.setShowRoot(false);
     }
 
-    private void addNewRecordToRoot(String country, ObservableList<City> cities, TreeItem<String> root) {
+    private static TreeItem<String> getRootFromTreeView(TreeView<String> treeView) {
+        TreeItem<String> root = treeView.getRoot();
+        if (root == null) {
+            root = new TreeItem<>("Root");
+        }
+        return root;
+    }
+
+    private static void addNewRecordToRoot(String country, ObservableList<City> cities, TreeItem<String> root) {
         TreeItem<String> countryTreeItem = new TreeItem<>(country);
         addCitiesToCountryTreeItem(cities, countryTreeItem);
         root.getChildren().add(countryTreeItem);
     }
-    // ======= COUNTRY LISTENER END ======= \\
 
-    // ======= CITY LISTENER START ======= \\
-    private void addCitiesListChangeListener(ObservableList<City> cities) {
-        cities.addListener(new ListChangeListener<City>() {
+    // ======= COUNTRY LISTENER START ======= \\
+    private static void addCountriesCitiesMapChangeListener(TreeView<String> treeView) {
+        countriesCitiesMap.addListener(new MapChangeListener<String, ObservableList<City>>() {
             @Override
-            public void onChanged(Change<? extends City> change) {
-                change.next();
-                if (change.wasAdded()) uploadCityTreeItemListToTheTreeView(change);
-                if (change.wasRemoved()) uploadCityTreeItemListToTheTreeView(change);
+            public void onChanged(Change<? extends String, ? extends ObservableList<City>> change) {
+                // Works only when You add something to map or delete a record. (not add to list which is a value in map)
+                if (change.wasAdded()) {
+                    addCountryWithCitiesToTheTreeView(treeView, change.getKey(), change.getValueAdded());
+                }
+                else if (change.wasRemoved()) {
+                    removeCountryFromTheTreeView(treeView);
+                }
             }
         });
     }
 
-    private void uploadCityTreeItemListToTheTreeView(ListChangeListener.Change<? extends City> change) {
+    private static void removeCountryFromTheTreeView(TreeView<String> treeView) {
+        TreeItem<String> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
+        selectedTreeItem.getParent().getChildren().remove(selectedTreeItem);
+    }
+
+    private static void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities) {
+        TreeItem<String> root = getRootFromTreeView(treeView);
+        addCountryWithCitiesToTheTreeView(treeView, country, cities, root);
+    }
+    // ======= COUNTRY LISTENER END ======= \\
+
+    // ======= CITY LISTENER START ======= \\
+    private static void addCitiesListChangeListener(TreeView<String> treeView, ObservableList<City> cities) {
+        cities.addListener(new ListChangeListener<City>() {
+            @Override
+            public void onChanged(Change<? extends City> change) {
+                change.next();
+                if (change.wasAdded()) {
+                    uploadCityTreeItemListToTheTreeView(treeView, change);
+                }
+                else if (change.wasRemoved()) {
+                    uploadCityTreeItemListToTheTreeView(treeView, change);
+                }
+            }
+        });
+    }
+
+    private static void uploadCityTreeItemListToTheTreeView(TreeView<String> treeView, ListChangeListener.Change<? extends City> change) {
         Map.Entry<String, ObservableList<City>> countryCitiesEntry = findCountryCityEntrySetByList(change.getList());
         if (countryCitiesEntry == null) return;
 
@@ -97,7 +130,7 @@ public class CustomLocales {
         addCitiesToCountryTreeItem(countryCitiesEntry.getValue(), countryTreeItem);
     }
 
-    private Map.Entry<String, ObservableList<City>> findCountryCityEntrySetByList(ObservableList<? extends City> list) {
+    private static Map.Entry<String, ObservableList<City>> findCountryCityEntrySetByList(ObservableList<? extends City> list) {
         for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
             if (entry.getValue().equals(list)) {
                 return entry;
@@ -106,7 +139,7 @@ public class CustomLocales {
         return null;
     }
 
-    private TreeItem<String> findTreeItemInList(ObservableList<TreeItem<String>> treeItemList, String itemName) {
+    private static TreeItem<String> findTreeItemInList(ObservableList<TreeItem<String>> treeItemList, String itemName) {
         for (TreeItem<String> treeItem : treeItemList) {
             if (treeItem.getValue().equals(itemName)) {
                 return treeItem;
@@ -116,7 +149,7 @@ public class CustomLocales {
     }
     // ======= CITY LISTENER END ======= \\
 
-    private void addCitiesToCountryTreeItem(ObservableList<City> cities, TreeItem<String> countryTreeItem) {
+    private static void addCitiesToCountryTreeItem(ObservableList<City> cities, TreeItem<String> countryTreeItem) {
         for (City city : cities) {
             TreeItem<String> cityTreeItem = new TreeItem<>(city.getName());
             countryTreeItem.getChildren().add(cityTreeItem);
@@ -124,12 +157,12 @@ public class CustomLocales {
     }
 
     // ======= MAP HANDLING START ======= \\
-    private void removeCountryFromMap(TreeItem<String> selectedTreeItem) {
+    private static void removeCountryFromMap(TreeItem<String> selectedTreeItem) {
         String countryName = selectedTreeItem.getValue();
         countriesCitiesMap.remove(countryName);
     }
 
-    private void removeCityFromMap(TreeItem<String> cityTreeItem) {
+    private static void removeCityFromMap(TreeItem<String> cityTreeItem) {
         TreeItem<String> countryTreeItem = cityTreeItem.getParent();
 
         String cityName = cityTreeItem.getValue();
@@ -143,7 +176,7 @@ public class CustomLocales {
         if (citiesList.isEmpty()) removeCountryFromMap(countryTreeItem);
     }
 
-    private City findCityInList(String cityName, ObservableList<City> citiesList) {
+    private static City findCityInList(String cityName, ObservableList<City> citiesList) {
         for (City city : citiesList) {
             if (city.getName().equals(cityName)) return city;
         }
@@ -151,7 +184,11 @@ public class CustomLocales {
     }
     // ======= MAP HANDLING END ======= \\
 
-    public void printAllSavedLocales() {
+    public static ObservableMap<String, ObservableList<City>> getCountriesCitiesMap(){
+        return countriesCitiesMap;
+    }
+
+    public static void printAllSavedLocales() {
         for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
             System.out.println("Country: " + entry.getKey());
             for (City city : entry.getValue()) {

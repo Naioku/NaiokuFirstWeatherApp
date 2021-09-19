@@ -106,7 +106,7 @@ public class WeatherClient {
         return cityObj;
     }
 
-    public City getCityInfo(String city, String countryISOCode) {
+    public City getCityInfo(String city, String countryISOCode) throws ArrayIndexOutOfBoundsException {
         String jsonResponse = restTemplate.getForObject(
                 GEO_URL + "direct?q={city},{countryCode}&appid={apiKey}",
                 String.class,
