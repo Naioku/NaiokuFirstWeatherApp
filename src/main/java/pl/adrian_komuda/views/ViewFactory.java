@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import pl.adrian_komuda.App;
+import pl.adrian_komuda.controllers.BaseController;
 
 import java.io.IOException;
 
@@ -35,8 +36,8 @@ public class ViewFactory {
     public static void showMainWindow() {
         switchCenterViewToWeatherView();
         STAGE.setScene(SCENE);
-        STAGE.setMinWidth(1124);
-        STAGE.setMinHeight(700);
+        STAGE.setMinWidth(1214);
+        STAGE.setMinHeight(750);
         STAGE.setMaximized(false);
         STAGE.show();
     }
@@ -94,5 +95,17 @@ public class ViewFactory {
         aboutStage.setResizable(false);
         aboutStage.initStyle(StageStyle.UTILITY);
         aboutStage.show();
+    }
+
+    private void switchTo(BaseController baseController) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
+        fxmlLoader.setController(baseController);
+        Parent parent;
+        try {
+            parent = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
     }
 }

@@ -60,6 +60,7 @@ public class WeatherViewController implements Initializable {
         setUpCities();
         setUpChangeCityChoiceBoxListener();
         setUpChangeCountryChoiceBoxListener();
+        //showLastHourlyWeather();
     }
 
     private void setUpCities() {
@@ -72,7 +73,7 @@ public class WeatherViewController implements Initializable {
     }
 
     private void showCurrentWeatherForCity(String city) {
-        WeatherDto currentWeatherForCity = weatherClient.getCurrentWeatherForCity(city);
+        WeatherDto currentWeatherForCity = weatherClient.getCurrentWeatherData(city);
         temperatureValueLabel.setText(currentWeatherForCity.getTemperature() + " " + currentWeatherForCity.getTemperatureUnit());
         pressureValueLabel.setText(currentWeatherForCity.getPressure() + " " + currentWeatherForCity.getPressureUnit());
         humidityValueLabel.setText(currentWeatherForCity.getHumidity() + " " + currentWeatherForCity.getHumidityUnit());
@@ -107,9 +108,22 @@ public class WeatherViewController implements Initializable {
         });
     }
 
+    private void showLastHourlyWeather() {
+        showHourlyWeather(null);
+    }
+
     private void showHourlyWeather(String cityName) {
-        City cityObj = findCityByName(cityName);
-        List<HourlyWeatherDto> hourlyWeatherDtos = weatherClient.getHourlyWeatherForOneCords(cityObj.getLatitude(), cityObj.getLongitude());
+        List<HourlyWeatherDto> hourlyWeatherDtos;
+
+        if (cityName != null) {
+            City cityObj = findCityByName(cityName);
+            hourlyWeatherDtos = weatherClient.getHourlyWeatherForecastData(cityObj.getLatitude(), cityObj.getLongitude());
+        }
+        else {
+            hourlyWeatherDtos = weatherClient.getLastHourlyWeatherForecastData();
+            System.out.println("hourlyWeatherDtos: " + hourlyWeatherDtos);
+            if (hourlyWeatherDtos == null) return;
+        }
 
         int quantityOfHourlyRecords = 24;
         createHourlyWeatherTableView(hourlyWeatherDtos, quantityOfHourlyRecords);

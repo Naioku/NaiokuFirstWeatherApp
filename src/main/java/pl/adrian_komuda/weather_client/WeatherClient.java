@@ -20,9 +20,12 @@ public class WeatherClient {
     private final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
     private final String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
 
+    private WeatherDto lastCurrentWeatherData;
+    private List<HourlyWeatherDto> lastHourlyWeatherData;
+
     public WeatherClient() {}
 
-    public WeatherDto getCurrentWeatherForCity(String city) {
+    public WeatherDto getCurrentWeatherData(String city) {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "weather?q={city}&appid={apiKey}&units=metric",
                 String.class,
@@ -44,10 +47,15 @@ public class WeatherClient {
             e.printStackTrace();
         }
 
+        lastCurrentWeatherData = weatherDto;
         return weatherDto;
     }
 
-    public List<HourlyWeatherDto> getHourlyWeatherForOneCords(float latitude, float longitude) {
+    public WeatherDto getLastCurrentWeatherData() {
+        return lastCurrentWeatherData;
+    }
+
+    public List<HourlyWeatherDto> getHourlyWeatherForecastData(float latitude, float longitude) {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "onecall?lat={lat}&lon={lon}&exclude=current,minutely,daily,alerts&appid={apiKey}&units=metric",
                 String.class,
@@ -78,7 +86,12 @@ public class WeatherClient {
             e.printStackTrace();
         }
 
+        lastHourlyWeatherData = hourlyWeatherDtos;
         return hourlyWeatherDtos;
+    }
+
+    public List<HourlyWeatherDto> getLastHourlyWeatherForecastData() {
+        return lastHourlyWeatherData;
     }
 
     public City getCityInfo(String city) {

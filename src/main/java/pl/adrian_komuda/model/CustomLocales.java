@@ -1,7 +1,6 @@
 package pl.adrian_komuda.model;
 
 import javafx.collections.*;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
@@ -14,9 +13,9 @@ public class CustomLocales {
      * First method You need to run.
      * @param treeView - treeView object to upload.
      */
-    public static void initializeCustomLocales(TreeView<String> treeView) {
+    public static void boundCustomLocalesWithTreeView(TreeView<String> treeView) {
         addCountriesCitiesMapChangeListener(treeView);
-        refreshTreeView(treeView);
+        refreshTreeView(treeView); // It is important, because the map have to be added to treeView on every load the add/delete view!
     }
 
     public static void addLocale(TreeView<String> treeView, String country, City city) {
@@ -152,6 +151,7 @@ public class CustomLocales {
     private static void addCitiesToCountryTreeItem(ObservableList<City> cities, TreeItem<String> countryTreeItem) {
         for (City city : cities) {
             TreeItem<String> cityTreeItem = new TreeItem<>(city.getName());
+            //addMouseClickListener(cityTreeItem);
             countryTreeItem.getChildren().add(cityTreeItem);
         }
     }
@@ -176,7 +176,11 @@ public class CustomLocales {
         if (citiesList.isEmpty()) removeCountryFromMap(countryTreeItem);
     }
 
-    private static City findCityInList(String cityName, ObservableList<City> citiesList) {
+    public static ObservableList<City> getCitiesByCountry(String country) {
+        return countriesCitiesMap.get(country);
+    }
+
+    public static City findCityInList(String cityName, ObservableList<City> citiesList) {
         for (City city : citiesList) {
             if (city.getName().equals(cityName)) return city;
         }

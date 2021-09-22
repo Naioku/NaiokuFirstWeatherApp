@@ -24,7 +24,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         Locale.setDefault(new Locale("en"));
         ViewFactory.showMainWindow();
-        ViewFactory.switchCenterViewToAddDeleteLocaleView();
+//        ViewFactory.switchCenterViewToAddDeleteLocaleView();
     }
 
     public static void main(String[] args) {
