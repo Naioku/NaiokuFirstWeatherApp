@@ -20,12 +20,15 @@ public class WeatherClient {
     private final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
     private final String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
 
-    private WeatherDto lastCurrentWeatherData;
-    private List<HourlyWeatherDto> lastHourlyWeatherData;
+    private City lastCheckedCity;
 
     public WeatherClient() {}
 
-    public WeatherDto getCurrentWeatherData(String city) {
+    public City getLastCheckedCity() {
+        return lastCheckedCity;
+    }
+
+    public WeatherDto getCurrentWeatherData(City city) {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "weather?q={city}&appid={apiKey}&units=metric",
                 String.class,
@@ -47,20 +50,16 @@ public class WeatherClient {
             e.printStackTrace();
         }
 
-        lastCurrentWeatherData = weatherDto;
+        lastCheckedCity = city;
         return weatherDto;
     }
 
-    public WeatherDto getLastCurrentWeatherData() {
-        return lastCurrentWeatherData;
-    }
-
-    public List<HourlyWeatherDto> getHourlyWeatherForecastData(float latitude, float longitude) {
+    public List<HourlyWeatherDto> getHourlyWeatherForecastData(City city) {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "onecall?lat={lat}&lon={lon}&exclude=current,minutely,daily,alerts&appid={apiKey}&units=metric",
                 String.class,
-                latitude,
-                longitude,
+                city.getLatitude(),
+                city.getLongitude(),
                 Config.API_KEY
         );
 
@@ -86,37 +85,8 @@ public class WeatherClient {
             e.printStackTrace();
         }
 
-        lastHourlyWeatherData = hourlyWeatherDtos;
+        lastCheckedCity = city;
         return hourlyWeatherDtos;
-    }
-
-    public List<HourlyWeatherDto> getLastHourlyWeatherForecastData() {
-        return lastHourlyWeatherData;
-    }
-
-    public City getCityInfo(String city) {
-        String jsonResponse = restTemplate.getForObject(
-                GEO_URL + "direct?q={city}&appid={apiKey}",
-                String.class,
-                city,
-                Config.API_KEY
-        );
-
-        City cityObj = new SpecificCity();
-
-        try {
-            OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
-            cityObj.setName(city);
-            cityObj.setLatitude(openWeatherGeocodingCityDto[0].getLat());
-            cityObj.setLongitude(openWeatherGeocodingCityDto[0].getLon());
-
-        } catch (JsonProcessingException e) {
-            System.out.println("Error in converting json to object!");
-            cityObj = new EmptyCity();
-            e.printStackTrace();
-        }
-
-        return cityObj;
     }
 
     public City getCityInfo(String city, String countryISOCode) throws ArrayIndexOutOfBoundsException {

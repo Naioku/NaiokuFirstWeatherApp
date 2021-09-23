@@ -13,17 +13,22 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import pl.adrian_komuda.App;
-import pl.adrian_komuda.controllers.BaseController;
+import pl.adrian_komuda.controllers.*;
+import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.io.IOException;
 
 public class ViewFactory {
-    private static final BorderPane MAIN_VIEW = (BorderPane) loadFXML("MainView");
+    private static final BorderPane MAIN_VIEW = (BorderPane) loadFXML(new MainViewController("MainView"));
     private static final Scene SCENE = new Scene(MAIN_VIEW);
     private static final Stage STAGE = new Stage();
 
-    private static Parent loadFXML(String fxml) {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("views/fxml/" + fxml + ".fxml"));
+    private static final WeatherClient weatherClientLeftPanel = new WeatherClient();
+    private static final WeatherClient weatherClientRightPanel = new WeatherClient();
+
+    private static Parent loadFXML(BaseController controller) {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("views/fxml/" + controller.getFxmlName() + ".fxml"));
+        fxmlLoader.setController(controller);
         try {
             return fxmlLoader.load();
         } catch (IOException e) {
@@ -46,8 +51,11 @@ public class ViewFactory {
         SplitPane splitPane = new SplitPane();
         splitPane.setDividerPosition(1, 0.5D);
 
-        VBox leftArea = (VBox) loadFXML("WeatherView");
-        VBox rightArea = (VBox) loadFXML("WeatherView");
+        BaseController weatherLeftViewController = new WeatherViewController("WeatherView", weatherClientLeftPanel);
+        BaseController weatherRightViewController = new WeatherViewController("WeatherView", weatherClientRightPanel);
+
+        VBox leftArea = (VBox) loadFXML(weatherLeftViewController);
+        VBox rightArea = (VBox) loadFXML(weatherRightViewController);
 
         setHeaderLabelName(leftArea, "Home city");
         setHeaderLabelName(rightArea, "Chosen city");
@@ -81,16 +89,19 @@ public class ViewFactory {
     }
 
     public static void switchCenterViewToAddDeleteLocaleView() {
-        MAIN_VIEW.setCenter(loadFXML("AddDeleteLocaleView"));
+        BaseController addDeleteLocaleViewController = new AddDeleteLocaleViewController("AddDeleteLocaleView");
+        MAIN_VIEW.setCenter(loadFXML(addDeleteLocaleViewController));
     }
 
     public static void switchCenterViewToOptions() {
-        MAIN_VIEW.setCenter(loadFXML("OptionsView"));
+        BaseController optionsViewController = new OptionsViewController("OptionsView");
+        MAIN_VIEW.setCenter(loadFXML(optionsViewController));
     }
 
     public static void showAbout() {
         Stage aboutStage = new Stage();
-        Scene aboutScene = new Scene(loadFXML("AboutView"));
+        BaseController aboutViewController = new AddDeleteLocaleViewController("AboutView");
+        Scene aboutScene = new Scene(loadFXML(aboutViewController));
         aboutStage.setScene(aboutScene);
         aboutStage.setResizable(false);
         aboutStage.initStyle(StageStyle.UTILITY);

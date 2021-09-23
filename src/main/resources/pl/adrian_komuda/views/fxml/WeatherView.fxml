@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="640.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.adrian_komuda.controllers.WeatherViewController">
+<VBox prefHeight="640.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox fx:id="headerVBox" alignment="CENTER" prefWidth="580.0">
          <children>

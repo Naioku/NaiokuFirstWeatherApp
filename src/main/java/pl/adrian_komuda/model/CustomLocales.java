@@ -186,6 +186,15 @@ public class CustomLocales {
         }
         return null;
     }
+
+    public static String findCountryByCity(City cityObj) {
+        for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
+            for (City cityFromList : entry.getValue()) {
+                if (cityFromList.equals(cityObj)) return entry.getKey();
+            }
+        }
+        return null;
+    }
     // ======= MAP HANDLING END ======= \\
 
     public static ObservableMap<String, ObservableList<City>> getCountriesCitiesMap(){

@@ -4,7 +4,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import pl.adrian_komuda.views.ViewFactory;
 
-public class MainViewController {
+public class MainViewController extends BaseController {
+
+    public MainViewController(String fxmlName) {
+        super(fxmlName);
+    }
 
     @FXML
     public void mainMenuCloseAction() {
