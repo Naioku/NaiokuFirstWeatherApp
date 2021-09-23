@@ -23,8 +23,8 @@ import pl.adrian_komuda.weather_client.WeatherClient;
 import java.net.URL;
 import java.util.*;
 
-public class WeatherViewController implements Initializable {
-    private final WeatherClient weatherClient = new WeatherClient();
+public class WeatherViewController extends BaseController implements Initializable {
+    private final WeatherClient weatherClient;
     private ObservableList<String> countriesList = FXCollections.observableArrayList();
     private final Map<String, ObservableList<City>> countiesCitiesMap = CustomLocales.getCountriesCitiesMap();
 
@@ -55,12 +55,32 @@ public class WeatherViewController implements Initializable {
     @FXML
     private VBox hourlyWeatherGridPaneVbox;
 
+    public WeatherViewController(String fxmlName, WeatherClient weatherClient) {
+        super(fxmlName);
+        this.weatherClient = weatherClient;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUpCities();
         setUpChangeCityChoiceBoxListener();
         setUpChangeCountryChoiceBoxListener();
-        //showLastHourlyWeather();
+        setLastCheckedCountry();
+        setLastCheckedCity();
+    }
+
+    private void setLastCheckedCountry() {
+        City lastCheckedCity = weatherClient.getLastCheckedCity();
+        if (lastCheckedCity != null) {
+            countryChoiceBox.setValue(CustomLocales.findCountryByCity(lastCheckedCity));
+        }
+    }
+
+    private void setLastCheckedCity() {
+        City lastCheckedCity = weatherClient.getLastCheckedCity();
+        if (lastCheckedCity != null) {
+            cityChoiceBox.setValue(lastCheckedCity);
+        }
     }
 
     private void setUpCities() {
@@ -72,7 +92,7 @@ public class WeatherViewController implements Initializable {
         countryChoiceBox.setItems(countriesList);
     }
 
-    private void showCurrentWeatherForCity(String city) {
+    private void showCurrentWeatherForCity(City city) {
         WeatherDto currentWeatherForCity = weatherClient.getCurrentWeatherData(city);
         temperatureValueLabel.setText(currentWeatherForCity.getTemperature() + " " + currentWeatherForCity.getTemperatureUnit());
         pressureValueLabel.setText(currentWeatherForCity.getPressure() + " " + currentWeatherForCity.getPressureUnit());
@@ -87,10 +107,10 @@ public class WeatherViewController implements Initializable {
                 if (newIndex.intValue() < 0) return;
 
                 String activeCountry = countryChoiceBox.getValue();
-                String newCityName = countiesCitiesMap.get(activeCountry).get(newIndex.intValue()).getName();
+                City newCity = countiesCitiesMap.get(activeCountry).get(newIndex.intValue());
 
-                showCurrentWeatherForCity(newCityName);
-                showHourlyWeather(newCityName);
+                showCurrentWeatherForCity(newCity);
+                showHourlyWeather(newCity);
             }
         });
     }
@@ -101,29 +121,15 @@ public class WeatherViewController implements Initializable {
             public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
                 String newCountryName = countriesList.get(newIndex.intValue());
                 ObservableList<City> newCitiesList = countiesCitiesMap.get(newCountryName);
-                //newCitiesList = newCitiesList.sorted();
 
                 cityChoiceBox.setItems(newCitiesList);
             }
         });
     }
 
-    private void showLastHourlyWeather() {
-        showHourlyWeather(null);
-    }
-
-    private void showHourlyWeather(String cityName) {
+    private void showHourlyWeather(City cityObj) {
         List<HourlyWeatherDto> hourlyWeatherDtos;
-
-        if (cityName != null) {
-            City cityObj = findCityByName(cityName);
-            hourlyWeatherDtos = weatherClient.getHourlyWeatherForecastData(cityObj.getLatitude(), cityObj.getLongitude());
-        }
-        else {
-            hourlyWeatherDtos = weatherClient.getLastHourlyWeatherForecastData();
-            System.out.println("hourlyWeatherDtos: " + hourlyWeatherDtos);
-            if (hourlyWeatherDtos == null) return;
-        }
+        hourlyWeatherDtos = weatherClient.getHourlyWeatherForecastData(cityObj);
 
         int quantityOfHourlyRecords = 24;
         createHourlyWeatherTableView(hourlyWeatherDtos, quantityOfHourlyRecords);

@@ -18,7 +18,7 @@ import pl.adrian_komuda.weather_client.WeatherClient;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AddDeleteLocaleViewController implements Initializable {
+public class AddDeleteLocaleViewController extends BaseController implements Initializable {
 
     @FXML
     private TextField countryTextField;
@@ -34,6 +34,10 @@ public class AddDeleteLocaleViewController implements Initializable {
 
     @FXML
     private Label errorLabel;
+
+    public AddDeleteLocaleViewController(String fxmlName) {
+        super(fxmlName);
+    }
 
     @FXML
     void addLocaleAction() {
