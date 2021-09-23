@@ -18,13 +18,8 @@ public class MainViewController {
     }
 
     @FXML
-    void leftPanelButtonAddCityOnAction() {
-        ViewFactory.switchCenterViewToAddCityView();
-    }
-
-    @FXML
-    void leftPanelButtonDeleteCityOnAction() {
-        ViewFactory.switchCenterViewToDeleteCityView();
+    void leftPanelButtonAddDeleteLocaleOnAction() {
+        ViewFactory.switchCenterViewToAddDeleteLocaleView();
     }
 
     @FXML

@@ -26,7 +26,7 @@ import java.util.*;
 public class WeatherViewController implements Initializable {
     private final WeatherClient weatherClient = new WeatherClient();
     private ObservableList<String> countriesList = FXCollections.observableArrayList();
-    private final Map<String, ObservableList<City>> countiesCitiesMap = new HashMap<>();
+    private final Map<String, ObservableList<City>> countiesCitiesMap = CustomLocales.getCountriesCitiesMap();
 
     @FXML
     private Label headerLabel;
@@ -60,26 +60,10 @@ public class WeatherViewController implements Initializable {
         setUpCities();
         setUpChangeCityChoiceBoxListener();
         setUpChangeCountryChoiceBoxListener();
+        //showLastHourlyWeather();
     }
 
     private void setUpCities() {
-        // Cities' list
-        ObservableList<City> polishCities = FXCollections.observableArrayList();
-        polishCities.add(weatherClient.getCityInfo("Plock"));
-        polishCities.add(weatherClient.getCityInfo("Warsaw"));
-
-        ObservableList<City> japaneseCities = FXCollections.observableArrayList();
-        japaneseCities.add(weatherClient.getCityInfo("Tokyo"));
-        japaneseCities.add(weatherClient.getCityInfo("Osaka"));
-
-        ObservableList<City> britishCities = FXCollections.observableArrayList();
-        britishCities.add(weatherClient.getCityInfo("London"));
-
-        // Binding cities to countries
-        countiesCitiesMap.put("Poland", polishCities);
-        countiesCitiesMap.put("Japan", japaneseCities);
-        countiesCitiesMap.put("GB", britishCities);
-
         // Getting countries' list
         countriesList.addAll(countiesCitiesMap.keySet());
         countriesList = countriesList.sorted();
@@ -89,7 +73,7 @@ public class WeatherViewController implements Initializable {
     }
 
     private void showCurrentWeatherForCity(String city) {
-        WeatherDto currentWeatherForCity = weatherClient.getCurrentWeatherForCity(city);
+        WeatherDto currentWeatherForCity = weatherClient.getCurrentWeatherData(city);
         temperatureValueLabel.setText(currentWeatherForCity.getTemperature() + " " + currentWeatherForCity.getTemperatureUnit());
         pressureValueLabel.setText(currentWeatherForCity.getPressure() + " " + currentWeatherForCity.getPressureUnit());
         humidityValueLabel.setText(currentWeatherForCity.getHumidity() + " " + currentWeatherForCity.getHumidityUnit());
@@ -117,15 +101,29 @@ public class WeatherViewController implements Initializable {
             public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
                 String newCountryName = countriesList.get(newIndex.intValue());
                 ObservableList<City> newCitiesList = countiesCitiesMap.get(newCountryName);
+                //newCitiesList = newCitiesList.sorted();
 
                 cityChoiceBox.setItems(newCitiesList);
             }
         });
     }
 
+    private void showLastHourlyWeather() {
+        showHourlyWeather(null);
+    }
+
     private void showHourlyWeather(String cityName) {
-        City cityObj = findCityByName(cityName);
-        List<HourlyWeatherDto> hourlyWeatherDtos = weatherClient.getHourlyWeatherForOneCords(cityObj.getLatitude(), cityObj.getLongitude());
+        List<HourlyWeatherDto> hourlyWeatherDtos;
+
+        if (cityName != null) {
+            City cityObj = findCityByName(cityName);
+            hourlyWeatherDtos = weatherClient.getHourlyWeatherForecastData(cityObj.getLatitude(), cityObj.getLongitude());
+        }
+        else {
+            hourlyWeatherDtos = weatherClient.getLastHourlyWeatherForecastData();
+            System.out.println("hourlyWeatherDtos: " + hourlyWeatherDtos);
+            if (hourlyWeatherDtos == null) return;
+        }
 
         int quantityOfHourlyRecords = 24;
         createHourlyWeatherTableView(hourlyWeatherDtos, quantityOfHourlyRecords);

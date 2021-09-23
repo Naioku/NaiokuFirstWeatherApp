@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import pl.adrian_komuda.views.ViewFactory;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * JavaFX App
@@ -21,7 +22,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Locale.setDefault(new Locale("en"));
         ViewFactory.showMainWindow();
+//        ViewFactory.switchCenterViewToAddDeleteLocaleView();
     }
 
     public static void main(String[] args) {
