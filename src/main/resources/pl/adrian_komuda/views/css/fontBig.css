@@ -1,0 +1,54 @@
+/*Theme base font sizes:*/
+.errorText{
+    -fx-font-size: 17px;
+}
+
+.header{
+   -fx-font-size: 25px;
+}
+Button, ToggleButton, Label, ChoiceBox, Slider, TextField, .menu-button {
+    -fx-font-size: 17px;
+}
+
+Slider .axis {
+    -fx-font-size: 17px;
+}
+.text-field {
+    -fx-font-size: 17px;
+}
+
+.text-field:focused {
+    -fx-font-size: 17px;
+}
+
+/*Table view:*/
+.table-view .column-header-background .label {
+    -fx-font-size: 16px;
+}
+.table-view .table-cell {
+    -fx-font-size: 16px;
+}
+
+/*Tree view:*/
+.tree-cell {
+    -fx-font-size: 17px;
+}
+
+/*menus and menu items:*/
+.menu-bar > .container > .menu-button > .label {
+    -fx-font-size: 17px;
+}
+
+.menu-bar > .container > .menu-button:hover > .label,
+.menu-bar > .container > .menu-button:focused > .label,
+.menu-bar > .container > .menu-button:showing > .label {
+    -fx-font-size: 17px;
+}
+
+.menu-item .label {
+    -fx-font-size: 17px;
+}
+
+.menu-item:focused .label, .menu-item:hovered .label {
+    -fx-font-size: 17px;
+}

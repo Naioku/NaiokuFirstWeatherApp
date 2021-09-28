@@ -14,9 +14,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import pl.adrian_komuda.App;
 import pl.adrian_komuda.controllers.*;
+import pl.adrian_komuda.model.ColorTheme;
+import pl.adrian_komuda.model.FontSize;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewFactory {
     private static final BorderPane MAIN_VIEW = (BorderPane) loadFXML(new MainViewController("MainView"));
@@ -25,6 +29,26 @@ public class ViewFactory {
 
     private static final WeatherClient weatherClientLeftPanel = new WeatherClient();
     private static final WeatherClient weatherClientRightPanel = new WeatherClient();
+
+    private static ColorTheme colorTheme = ColorTheme.LIGHT;
+    private static FontSize fontSize = FontSize.SMALL;
+    private static List<Stage> activeStages = new ArrayList<>();
+
+    public static ColorTheme getColorTheme() {
+        return colorTheme;
+    }
+
+    public static FontSize getFontSize() {
+        return fontSize;
+    }
+
+    public static void setColorTheme(ColorTheme colorTheme) {
+        ViewFactory.colorTheme = colorTheme;
+    }
+
+    public static void setFontSize(FontSize fontSize) {
+        ViewFactory.fontSize = fontSize;
+    }
 
     private static Parent loadFXML(BaseController controller) {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("views/fxml/" + controller.getFxmlName() + ".fxml"));
@@ -45,6 +69,8 @@ public class ViewFactory {
         STAGE.setMinHeight(750);
         STAGE.setMaximized(false);
         STAGE.show();
+        activeStages.add(STAGE);
+        updateStyles();
     }
 
     public static void switchCenterViewToWeatherView() {
@@ -100,23 +126,24 @@ public class ViewFactory {
 
     public static void showAbout() {
         Stage aboutStage = new Stage();
-        BaseController aboutViewController = new AddDeleteLocaleViewController("AboutView");
+        BaseController aboutViewController = new AboutViewController("AboutView");
         Scene aboutScene = new Scene(loadFXML(aboutViewController));
         aboutStage.setScene(aboutScene);
         aboutStage.setResizable(false);
         aboutStage.initStyle(StageStyle.UTILITY);
         aboutStage.show();
+        aboutStage.onCloseRequestProperty().setValue(windowEvent -> activeStages.remove(aboutStage));
+        activeStages.add(aboutStage);
+        updateStyles();
     }
 
-    private void switchTo(BaseController baseController) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
-        fxmlLoader.setController(baseController);
-        Parent parent;
-        try {
-            parent = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+    public static void updateStyles() {
+        for (Stage stage : activeStages) {
+            Scene scene = stage.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(ViewFactory.class.getResource("css/default.css").toExternalForm());
+            scene.getStylesheets().add(ViewFactory.class.getResource(colorTheme.getCssPath()).toExternalForm());
+            scene.getStylesheets().add(ViewFactory.class.getResource(fontSize.getCssPath()).toExternalForm());
         }
     }
 }

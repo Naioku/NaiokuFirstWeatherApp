@@ -17,7 +17,7 @@
    <children>
       <VBox fx:id="headerVBox" alignment="CENTER" prefWidth="580.0">
          <children>
-            <Label fx:id="headerLabel" text="Home city">
+            <Label fx:id="headerLabel" styleClass="header" text="Home city">
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
