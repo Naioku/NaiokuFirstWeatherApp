@@ -29,13 +29,13 @@
    <left>
       <VBox alignment="TOP_CENTER" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <ToggleButton mnemonicParsing="false" onAction="#leftPanelButtonWeatherOnAction" prefHeight="50.0" prefWidth="150.0" selected="true" text="Weather">
+            <ToggleButton minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonWeatherOnAction" prefWidth="150.0" selected="true" text="Weather" textAlignment="CENTER">
                <toggleGroup>
                   <ToggleGroup fx:id="switchView" />
                </toggleGroup>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" onAction="#leftPanelButtonAddDeleteLocaleOnAction" prefHeight="50.0" prefWidth="150.0" text="Add/delete a locale" toggleGroup="$switchView" />
-            <ToggleButton mnemonicParsing="false" onAction="#leftPanelButtonOptionsOnAction" prefHeight="50.0" prefWidth="150.0" text="Options" toggleGroup="$switchView" />
+            <ToggleButton minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonAddDeleteLocaleOnAction" prefWidth="150.0" text="Add/delete a locale" textAlignment="CENTER" toggleGroup="$switchView" wrapText="true" />
+            <ToggleButton minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonOptionsOnAction" prefWidth="150.0" text="Options" textAlignment="CENTER" toggleGroup="$switchView" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

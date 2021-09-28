@@ -1,0 +1,336 @@
+/* Theme's base colors: */
+* {
+    -fx-my-background-color: #575757;
+
+    -fx-default-views-background-color: #707070; /* like TreeView, TableView */
+    -fx-default-pane-background-color-lighter: #606060; /* to make special scratched border (two-layers) */
+    -fx-default-pane-divider: #656565;
+
+    -fx-my-background-color-buttons: #686868;
+    -fx-my-background-color-buttons-highlighted: #68686888;
+    -fx-my-background-color-buttons-pressed: #ff800060;
+    -fx-my-background-color-buttons-border: #00000055;
+
+    -fx-my-background-color-choice-box: #464646;
+    -fx-my-background-color-choice-box-highlighted: #464646aa;
+    -fx-my-background-color-choice-box-menu-item-highlighted: #4e4e4e;
+
+    -fx-my-slider-color-track: #464646;
+    -fx-my-slider-color-thumb: #686868;
+    -fx-my-slider-color-thumb-highlighted: #797979;
+
+    -fx-my-table-headers-border-color: #c76e04;
+    -fx-my-headers-color-min: #944d00ca;
+    -fx-my-headers-color-max: #d48d37fa;
+    -fx-my-table-cells-background-color: #575757;
+    -fx-my-table-cells-background-color-odd: #626262;
+    -fx-my-table-cells-background-color-selected: #ff800040;
+    -fx-my-table-cells-border-color: #d48d37fa;
+
+    -fx-default-chart-background-color: #606060;
+    -fx-my-charts-label-fill: #ffffff;
+    -fx-my-default-bar-chart-color-data0: #ff9b4f;
+    -fx-my-default-bar-chart-color-data1: #f7ff80;
+
+    -fx-my-default-items-color-showing: #ff800040;
+    -fx-my-default-items-color-hover: #686868;
+    -fx-my-default-border-color: #505050;
+
+    -fx-my-font-color: white;
+    -fx-my-font-header-color: orange;
+    -fx-my-font-color-highlighted: orange;
+	-fx-my-error-text-fill: orange;
+}
+/* ------------------------------------------ */
+
+VBox, BorderPane {
+    -fx-background-color: -fx-my-background-color;
+}
+
+.center-text {
+    -fx-alignment: center;
+}
+
+Button, ToggleButton, Label, ChoiceBox, Slider, MenuBar .label, .label {
+    -fx-text-fill: -fx-my-font-color;
+}
+
+.header {
+    -fx-text-fill: -fx-my-font-header-color;
+}
+
+.error-label {
+    -fx-text-fill: -fx-my-error-text-fill;
+}
+
+.context-menu {
+    -fx-background-color: -fx-my-background-color-choice-box;
+}
+
+/*
+ * Buttons
+ */
+Button, ToggleButton {
+    -fx-background-color: -fx-my-background-color-buttons;
+    -fx-background-radius: 5;
+    -fx-border-color: -fx-my-background-color-buttons-border;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-radius: 5;
+    -fx-background-insets: 0;
+}
+
+Button:hover, ToggleButton:hover {
+    -fx-background-color: -fx-my-background-color-buttons-highlighted;
+    -fx-cursor: hand;
+}
+
+Button:pressed, ToggleButton:pressed {
+    -fx-background-color: -fx-my-background-color-buttons-pressed;
+}
+/* ------------------------------------------ */
+
+/*
+ * Choice Box
+ */
+ChoiceBox {
+    -fx-background-color: -fx-my-background-color-choice-box;
+}
+
+ChoiceBox:hover {
+    -fx-background-color: -fx-my-background-color-choice-box-highlighted;
+    -fx-cursor: hand;
+}
+
+// Background color of the whole context menu
+ChoiceBox .context-menu {
+    -fx-background-color: -fx-my-background-color-choice-box;
+}
+
+// Focused item background color in the list
+ChoiceBox .menu-item:focused {
+    -fx-background-color: -fx-my-background-color-choice-box-menu-item-highlighted;
+}
+
+// Text color of non-focused items in the list
+ChoiceBox .menu-item > .label {
+    -fx-text-fill: -fx-my-font-color;
+}
+
+// Text color of focused item in the list
+ChoiceBox .menu-item:focused > .label {
+    -fx-text-fill: -fx-my-font-color-highlighted;
+}
+/* ------------------------------------------ */
+
+/*
+ * SLIDER
+ */
+.slider .axis {
+    -fx-tick-label-fill: -fx-my-font-color;
+}
+
+Slider .track {
+    -fx-background-color: -fx-my-slider-color-track;
+}
+
+Slider .thumb {
+    -fx-background-color: -fx-my-slider-color-thumb;
+}
+
+Slider .thumb:hover {
+    -fx-background-color: -fx-my-slider-color-thumb-highlighted;
+    -fx-cursor: hand;
+}
+/* ------------------------------------------ */
+
+/*
+ * MENU BAR
+ */
+MenuBar {
+    -fx-background-color: -fx-my-background-color;
+}
+
+MenuBar .menu:hover, MenuBar .menu:showing {
+    -fx-background-color: -fx-my-default-items-color-hover;
+    -fx-cursor: hand;
+}
+
+MenuBar .menu:showing {
+    -fx-background-color: -fx-my-default-items-color-showing;
+}
+
+MenuBar .menu:showing > .label {
+    -fx-text-fill: -fx-my-font-color-highlighted;
+}
+
+MenuBar .context-menu {
+    -fx-background-color: -fx-my-background-color;
+}
+
+MenuBar .menu-item:focused {
+    -fx-background-color: -fx-my-default-items-color-hover;
+    -fx-cursor: hand;
+}
+
+/*
+ * TREE VIEW
+ */
+.tree-view {
+    -fx-background-color: -fx-default-views-background-color;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-color: -fx-my-default-border-color;
+}
+
+.tree-cell {
+    -fx-background-color: -fx-default-views-background-color;
+    -fx-text-fill: -fx-my-font-color;
+}
+
+.tree-cell:filled:hover {
+    -fx-background-color: -fx-my-default-items-color-hover;
+    -fx-cursor: hand;
+}
+
+.tree-cell:selected,
+.tree-cell:selected:hover {
+    -fx-background-color: -fx-my-default-items-color-showing;
+    -fx-text-fill: -fx-my-font-color-highlighted;
+}
+
+/*
+ * TABLE VIEW
+ */
+.table-view {
+    -fx-background-color: -fx-default-views-background-color;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-color: -fx-my-default-border-color;
+}
+
+.table-view:focused {
+    -fx-background-color: -fx-default-views-background-color;
+}
+
+.table-view .column-header {
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: -fx-my-table-headers-border-color;
+}
+
+.table-view .column-header-background,
+.table-view .column-header-background .filler {
+    -fx-background-color: linear-gradient(-fx-my-headers-color-min 0%, -fx-my-headers-color-max 100%);
+}
+
+
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-my-font-color;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: -fx-my-font-color;
+}
+
+.table-row-cell {
+    -fx-background-color: -fx-my-table-cells-background-color;
+    -fx-background-insets: 0, 0 0 0 0;
+    -fx-table-cell-border-color: -fx-my-table-cells-border-color;
+    /*-fx-border-color: -fx-my-table-cells-border-color;*/
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-my-table-cells-background-color-odd;
+    -fx-background-insets: 0, 0 0 0 0;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-my-table-cells-background-color-selected;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+}
+
+/*
+ * CHARTS
+ */
+ BarChart {
+    -fx-background-color: -fx-default-views-background-color;
+    -fx-border-color: -fx-my-default-border-color;
+ }
+
+.axis {
+    -fx-tick-label-fill: -fx-my-charts-label-fill;
+}
+
+ .axis-label {
+    -fx-text-fill: -fx-my-charts-label-fill;
+ }
+
+ .chart-plot-background {
+     -fx-background-color: -fx-default-chart-background-color;
+ }
+
+ .default-color0.chart-bar { -fx-background-color: -fx-my-default-bar-chart-color-data0; }
+ .default-color1.chart-bar { -fx-background-color: -fx-my-default-bar-chart-color-data1; }
+ .default-color0.chart-bar-symbol { -fx-background-color: -fx-my-default-bar-chart-color-data0, #4fd0ff; }
+ .default-color1.chart-bar-symbol { -fx-background-color: -fx-my-default-bar-chart-color-data1, #4fd0ff; }
+
+ .chart-legend {
+    -fx-background-color: -fx-default-chart-background-color;
+    -fx-stroke: #4fd0ff;
+ }
+
+ /*
+  * ScrollPane
+  */
+ ScrollPane {
+     -fx-background-color: -fx-default-pane-background-color-lighter;
+     -fx-border-color: -fx-my-default-border-color;
+ }
+
+ .scroll-pane > .viewport {
+    -fx-background-color: -fx-my-background-color;
+ }
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color: transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-my-default-border-color;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #4e4e4e;
+    -fx-background-radius: 5px;
+}
+
+ScrollPane > corner {
+    -fx-border-color: transparent;
+}
+
+/*
+ * SplitPane
+ */
+SplitPane {
+     -fx-background-color: -fx-default-pane-background-color-lighter;
+     -fx-border-color: -fx-my-default-border-color;
+}
+
+SplitPane:horizontal > .split-pane-divider {
+   -fx-background-color: -fx-default-pane-divider;
+}
+SplitPane:vertical > .split-pane-divider {
+   -fx-background-color: -fx-default-pane-divider;
+}
