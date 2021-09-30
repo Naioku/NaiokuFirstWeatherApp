@@ -31,7 +31,7 @@ public class ViewFactory {
     private static final WeatherClient weatherClientHomePanel = new WeatherClient();
     private static final WeatherClient weatherClientAnotherPanel = new WeatherClient();
 
-    private static ColorTheme colorTheme = ColorTheme.LIGHT;
+    private static ColorTheme colorTheme = ColorTheme.DARK;
     private static FontSize fontSize = FontSize.MEDIUM;
     private static List<Stage> activeStages = new ArrayList<>();
 
@@ -66,8 +66,8 @@ public class ViewFactory {
     public static void showMainWindow() {
         switchCenterViewToWeatherView();
         STAGE.setScene(SCENE);
-        STAGE.setMinWidth(1214);
-        STAGE.setMinHeight(750);
+        STAGE.setMinWidth(1294);
+        STAGE.setMinHeight(800);
         STAGE.setMaximized(false);
         STAGE.show();
         activeStages.add(STAGE);

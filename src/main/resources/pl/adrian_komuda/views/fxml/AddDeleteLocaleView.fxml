@@ -26,7 +26,7 @@
                      <children>
                         <VBox alignment="TOP_CENTER" fillWidth="false" spacing="20.0">
                            <children>
-                              <Label styleClass="header" text="Add a new city...">
+                              <Label styleClass="header" text="Add a new city">
                                  <VBox.margin>
                                     <Insets bottom="30.0" />
                                  </VBox.margin>
