@@ -7,7 +7,14 @@ import javafx.scene.control.TreeView;
 import java.util.*;
 
 public class CustomLocales {
-    private static final ObservableMap<String, ObservableList<City>> countriesCitiesMap = FXCollections.observableMap(new HashMap<>());
+    private static final ObservableMap<String, ObservableList<City>> countriesCitiesMap = FXCollections.observableMap(new HashMap<>());;
+
+    /*
+    static {
+        countriesCitiesMap = FXCollections.observableMap(new HashMap<>());
+    }
+
+     */
 
     /**
      * First method You need to run.

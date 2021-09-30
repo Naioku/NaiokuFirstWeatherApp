@@ -1,5 +1,7 @@
 package pl.adrian_komuda.model;
 
+import pl.adrian_komuda.HelpingMethods;
+
 public class WeatherDto {
     private int temperature = 0;
     private int pressure = 0;
@@ -27,12 +29,8 @@ public class WeatherDto {
         this.humidity = humidity;
     }
 
-    private float mPerSecToKmPerH(float speed) {
-        return (float) (speed * 3.6);
-    }
-
     public void setWindSpeed(float windSpeed) {
-        windSpeed = mPerSecToKmPerH(windSpeed);
+        windSpeed = HelpingMethods.mPerSecToKmPerH(windSpeed);
         windSpeed = Math.round(windSpeed);
         this.windSpeed = (int) windSpeed;
     }

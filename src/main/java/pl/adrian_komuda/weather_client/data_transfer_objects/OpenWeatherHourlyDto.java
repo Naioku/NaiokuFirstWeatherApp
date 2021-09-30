@@ -16,7 +16,7 @@ public class OpenWeatherHourlyDto {
     private int uvi;
 
     @JsonProperty("weather")
-    private OpenWeatherHourlyWeatherDto[] weather;
+    private OpenWeatherHourlyAndDailyWeatherDto[] weather;
 
     public long getDt() {
         return dt;
@@ -39,7 +39,7 @@ public class OpenWeatherHourlyDto {
     }
 
     // Without this getter, "main" object will be null. Jason must require it...
-    public OpenWeatherHourlyWeatherDto[] getWeather() {
+    public OpenWeatherHourlyAndDailyWeatherDto[] getWeather() {
         return weather;
     }
 }

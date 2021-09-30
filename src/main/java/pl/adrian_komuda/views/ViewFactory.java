@@ -2,6 +2,7 @@ package pl.adrian_komuda.views;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,11 +28,11 @@ public class ViewFactory {
     private static final Scene SCENE = new Scene(MAIN_VIEW);
     private static final Stage STAGE = new Stage();
 
-    private static final WeatherClient weatherClientLeftPanel = new WeatherClient();
-    private static final WeatherClient weatherClientRightPanel = new WeatherClient();
+    private static final WeatherClient weatherClientHomePanel = new WeatherClient();
+    private static final WeatherClient weatherClientAnotherPanel = new WeatherClient();
 
     private static ColorTheme colorTheme = ColorTheme.LIGHT;
-    private static FontSize fontSize = FontSize.SMALL;
+    private static FontSize fontSize = FontSize.MEDIUM;
     private static List<Stage> activeStages = new ArrayList<>();
 
     public static ColorTheme getColorTheme() {
@@ -50,7 +51,7 @@ public class ViewFactory {
         ViewFactory.fontSize = fontSize;
     }
 
-    private static Parent loadFXML(BaseController controller) {
+    public static Parent loadFXML(BaseController controller) {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("views/fxml/" + controller.getFxmlName() + ".fxml"));
         fxmlLoader.setController(controller);
         try {
@@ -73,46 +74,90 @@ public class ViewFactory {
         updateStyles();
     }
 
+    public static void switchCenterViewToWeeklyForecastView() {
+        SplitPane splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.VERTICAL);
+
+
+        BaseController weeklyForecastTop = new WeeklyForecastViewController("WeeklyForecastView", weatherClientHomePanel);
+        BaseController weeklyForecastBottom = new WeeklyForecastViewController("WeeklyForecastView", weatherClientAnotherPanel);
+
+        VBox topArea = (VBox) loadFXML(weeklyForecastTop);
+        VBox bottomArea = (VBox) loadFXML(weeklyForecastBottom);
+
+        setHeaderLabelName2(topArea, "Home city");
+        setHeaderLabelName2(bottomArea, "Chosen city");
+
+        splitPane.getItems().addAll(topArea, bottomArea);
+        MAIN_VIEW.setCenter(splitPane);
+    }
+
     public static void switchCenterViewToWeatherView() {
         SplitPane splitPane = new SplitPane();
-        splitPane.setDividerPosition(1, 0.5D);
 
-        BaseController weatherLeftViewController = new WeatherViewController("WeatherView", weatherClientLeftPanel);
-        BaseController weatherRightViewController = new WeatherViewController("WeatherView", weatherClientRightPanel);
+        BaseController weatherLeftViewController = new WeatherViewController("WeatherView", weatherClientHomePanel);
+        BaseController weatherRightViewController = new WeatherViewController("WeatherView", weatherClientAnotherPanel);
 
         VBox leftArea = (VBox) loadFXML(weatherLeftViewController);
         VBox rightArea = (VBox) loadFXML(weatherRightViewController);
 
-        setHeaderLabelName(leftArea, "Home city");
-        setHeaderLabelName(rightArea, "Chosen city");
+        setHeaderLabelName2(leftArea, "Home city");
+        setHeaderLabelName2(rightArea, "Chosen city");
 
         splitPane.getItems().addAll(leftArea, rightArea);
         MAIN_VIEW.setCenter(splitPane);
     }
 
-    private static void setHeaderLabelName(VBox area, String text) {
-        Node headerVBox = getChildWithProvidedFxId(area, "headerVBox");
+    private static void setHeaderLabelName2(Node nodeLevel0, String text) {
+        if (nodeLevel0 instanceof Pane) {
+            Pane area = (Pane) nodeLevel0;
+            ObservableList<Node> childrenNodes = area.getChildren();
+            if (childrenNodes != null) {
+                for (Node nodeLevel1 : childrenNodes) {
+                    setHeaderLabelName2(nodeLevel1, text);
+                }
+            }
+        }
 
-        if (headerVBox != null) {
-            Node headerLabelNode = getChildWithProvidedFxId((Pane) headerVBox, "headerLabel");
-            if (headerLabelNode != null) {
-                Label textLabel = (Label) headerLabelNode;
-                textLabel.setText(text);
+        if (nodeLevel0 instanceof Label) {
+            Label label = (Label) nodeLevel0;
+            String labelFxId = label.getId();
+            if (labelFxId != null && labelFxId.equals("headerLabel")) {
+                label.setText(text);
             }
         }
     }
 
-    private static Node getChildWithProvidedFxId(Pane parentNode, String fxid) {
-        ObservableList<Node> childrenNodes = parentNode.getChildren();
-        for (Node child : childrenNodes) {
-            String childFxId = child.getId();
-            if (childFxId != null &&
-                    childFxId.equals(fxid)) {
-                return child;
-            }
-        }
-        return null;
-    }
+//    private static void setHeaderLabelName(Pane area, String text) {
+//        Node headerVBox = getChildWithProvidedFxId(area, "headerVBox");
+//
+//        // For those headers wrapped with one additional HBox (Weekly forecast).
+//        if (headerVBox == null) {
+//            Node headerHBox = getChildWithProvidedFxId(area, "headerHBox");
+//            setHeaderLabelName((Pane) headerHBox, text);
+//        }
+//        // ==============================
+//
+//        if (headerVBox != null) {
+//            Node headerLabelNode = getChildWithProvidedFxId((Pane) headerVBox, "headerLabel");
+//            if (headerLabelNode != null) {
+//                Label textLabel = (Label) headerLabelNode;
+//                textLabel.setText(text);
+//            }
+//        }
+//    }
+//
+//    private static Node getChildWithProvidedFxId(Pane parentNode, String fxid) {
+//        ObservableList<Node> childrenNodes = parentNode.getChildren();
+//        for (Node child : childrenNodes) {
+//            String childFxId = child.getId();
+//            if (childFxId != null &&
+//                    childFxId.equals(fxid)) {
+//                return child;
+//            }
+//        }
+//        return null;
+//    }
 
     public static void switchCenterViewToAddDeleteLocaleView() {
         BaseController addDeleteLocaleViewController = new AddDeleteLocaleViewController("AddDeleteLocaleView");

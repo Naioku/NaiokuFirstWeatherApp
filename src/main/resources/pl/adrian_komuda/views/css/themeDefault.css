@@ -1,3 +1,16 @@
 .center-text {
     -fx-alignment: center;
 }
+
+/*
+ * Weekly forecast
+ */
+.one-day-record-vbox {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: grey;
+}
+
+.header-vbox-weekly-forecast {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: grey;
+}

@@ -6,11 +6,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.springframework.web.client.RestTemplate;
 import pl.adrian_komuda.Config;
+import pl.adrian_komuda.Debug;
 import pl.adrian_komuda.model.*;
-import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherGeocodingCityDto;
-import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherHourlyDto;
-import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherOneCallDto;
-import pl.adrian_komuda.weather_client.data_transfer_objects.OpenWeatherWeatherDto;
+import pl.adrian_komuda.weather_client.data_transfer_objects.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +85,47 @@ public class WeatherClient {
 
         lastCheckedCity = city;
         return hourlyWeatherDtos;
+    }
+
+    public List<WeeklyForecastDto> getWeeklyWeatherForecastData(City city) {
+        String jsonResponse = restTemplate.getForObject(
+                WEATHER_URL + "onecall?lat={lat}&lon={lon}&exclude=current,minutely,alerts&appid={apiKey}&units=metric",
+                String.class,
+                city.getLatitude(),
+                city.getLongitude(),
+                Config.API_KEY
+        );
+
+        List<WeeklyForecastDto> weeklyForecastDtos = new ArrayList<>();
+
+        try {
+            OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
+            for (OpenWeatherDailyDto openWeatherDto : openWeatherOneCallDto.getDaily()) {
+                WeeklyForecastDto weeklyForecastDto = new WeeklyForecastDto(
+                        openWeatherDto.getDt(), openWeatherOneCallDto.getTimezone_offset(),
+                        openWeatherDto.getDayTemp(),
+                        openWeatherDto.getNightTemp(),
+                        openWeatherDto.getMinTemp(),
+                        openWeatherDto.getMaxTemp(),
+                        openWeatherDto.getDayFeelsLike(),
+                        openWeatherDto.getNightFeelsLike(),
+                        openWeatherDto.getPressure(),
+                        openWeatherDto.getHumidity(),
+                        openWeatherDto.getWindSpeed(),
+                        openWeatherDto.getDescription(),
+                        openWeatherDto.getIcon()
+                );
+
+                weeklyForecastDtos.add(weeklyForecastDto);
+            }
+
+        } catch (JsonProcessingException e) {
+            System.out.println("Error in converting json to object!");
+            e.printStackTrace();
+        }
+
+        lastCheckedCity = city;
+        return weeklyForecastDtos;
     }
 
     public City getCityInfo(String city, String countryISOCode) throws ArrayIndexOutOfBoundsException {

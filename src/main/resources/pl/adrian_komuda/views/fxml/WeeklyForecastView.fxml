@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="355.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" spacing="150.0" styleClass="header-vbox-weekly-forecast">
+         <children>
+            <VBox fx:id="headerVBox" alignment="CENTER" fillWidth="false" maxHeight="-Infinity">
+               <children>
+                  <Label fx:id="headerLabel" styleClass="header" text="Home city">
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" fillWidth="false" spacing="15.0">
+               <children>
+                  <VBox alignment="TOP_RIGHT" fillWidth="false" spacing="15.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="20.0">
+                           <children>
+                              <Label text="Country" />
+                              <ChoiceBox fx:id="countryChoiceBox" prefHeight="25.0" prefWidth="244.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="20.0">
+                           <children>
+                              <Label text="City" />
+                              <ChoiceBox fx:id="cityChoiceBox" prefHeight="25.0" prefWidth="244.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </HBox>
+      <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="recordsVBox" />
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

@@ -12,11 +12,18 @@ public class OpenWeatherOneCallDto {
     @JsonProperty("timezone_offset")
     private long timezone_offset;
 
+    @JsonProperty("daily")
+    private OpenWeatherDailyDto[] daily;
+
     public OpenWeatherHourlyDto[] getHourly() {
         return hourly;
     }
 
     public long getTimezone_offset() {
         return timezone_offset;
+    }
+
+    public OpenWeatherDailyDto[] getDaily() {
+        return daily;
     }
 }

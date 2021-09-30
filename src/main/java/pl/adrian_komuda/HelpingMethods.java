@@ -13,4 +13,15 @@ public class HelpingMethods {
         sdf.setTimeZone(TimeZone.getTimeZone("GMT+0")); // Timezone offset included in getting data fom weather client.
         return sdf.format(date);
     }
+
+    public static String convertUNIXSecondsToDate(long seconds) {
+        Date date = new java.util.Date(seconds*1000L);
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM.dd (EEE)");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+0")); // Timezone offset included in getting data fom weather client.
+        return sdf.format(date);
+    }
+
+    public static float mPerSecToKmPerH(float speed) {
+        return (float) (speed * 3.6);
+    }
 }

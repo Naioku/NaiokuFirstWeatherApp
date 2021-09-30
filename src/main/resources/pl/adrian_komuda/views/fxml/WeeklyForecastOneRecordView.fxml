@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" styleClass="one-day-record-vbox" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane alignment="CENTER" hgap="15.0" vgap="15.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label styleClass="record-day" text="Day" />
+                        <Label text=" / " />
+                        <Label styleClass="record-night" text="Night" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="tempDayValue" styleClass="record-day" text="Value" />
+                        <Label text=" / " />
+                        <Label fx:id="tempNightValue" styleClass="record-night" text="Value" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2">
+               <children>
+                  <Label styleClass="record-header" text="Temperature" />
+               </children>
+            </VBox>
+            <Label styleClass="record-header" text="Feels like" GridPane.columnIndex="3" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <Label text="Min / Max" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="tempMinValue" text="Value" />
+                        <Label text=" / " />
+                        <Label fx:id="tempMaxValue" text="Value" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label styleClass="record-day" text="Day" />
+                        <Label text=" / " />
+                        <Label styleClass="record-night" text="Night" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="feelsLikeDayValue" styleClass="record-day" text="Value" />
+                        <Label text=" / " />
+                        <Label fx:id="feelsLikeNightValue" styleClass="record-night" text="Value" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.columnSpan="2">
+               <children>
+                  <Label styleClass="record-header" text="Weather" />
+               </children>
+            </VBox>
+            <Label styleClass="record-header" text="Pressure" GridPane.columnIndex="6" />
+            <Label styleClass="record-header" text="Humidity" GridPane.columnIndex="7" />
+            <Label styleClass="record-header" text="Wind speed" GridPane.columnIndex="8" />
+            <Label fx:id="pressureValue" text="Value" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+            <Label fx:id="humidityValue" text="Value" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+            <Label fx:id="windSpeedValue" text="Value" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+            <Label fx:id="descriptionValue" text="Description" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Label styleClass="record-header" text="Date (MM.DD)" />
+            <Label fx:id="dateValue" text="Value" GridPane.rowIndex="1" />
+            <VBox fx:id="iconVBox" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="1">
+               <children>
+                  <Label text="Icon" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </GridPane>
+   </children>
+</VBox>

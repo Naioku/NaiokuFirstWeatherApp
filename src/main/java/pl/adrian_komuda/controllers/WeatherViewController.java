@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import javafx.scene.paint.Paint;
+import pl.adrian_komuda.HelpingClasses.ChoiceBoxesHandling;
 import pl.adrian_komuda.HelpingMethods;
 import pl.adrian_komuda.model.*;
 import pl.adrian_komuda.weather_client.WeatherClient;
@@ -27,6 +28,7 @@ public class WeatherViewController extends BaseController implements Initializab
     private final WeatherClient weatherClient;
     private ObservableList<String> countriesList = FXCollections.observableArrayList();
     private final Map<String, ObservableList<City>> countiesCitiesMap = CustomLocales.getCountriesCitiesMap();
+    private ChoiceBoxesHandling choiceBoxesHandlingObject;
 
     @FXML
     private Label headerLabel;
@@ -55,6 +57,29 @@ public class WeatherViewController extends BaseController implements Initializab
     @FXML
     private VBox hourlyWeatherGridPaneVbox;
 
+    private final ChangeListener<Number> cityChoiceBoxListener = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
+            if (newIndex.intValue() < 0) return;
+
+            String activeCountry = countryChoiceBox.getValue();
+            City newCity = countiesCitiesMap.get(activeCountry).get(newIndex.intValue());
+
+            showCurrentWeatherForCity(newCity);
+            showHourlyWeather(newCity);
+        }
+    };
+
+    private final ChangeListener<Number> countryChoiceBoxListener = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
+            String newCountryName = countriesList.get(newIndex.intValue());
+            ObservableList<City> newCitiesList = countiesCitiesMap.get(newCountryName);
+
+            cityChoiceBox.setItems(newCitiesList);
+        }
+    };
+
     public WeatherViewController(String fxmlName, WeatherClient weatherClient) {
         super(fxmlName);
         this.weatherClient = weatherClient;
@@ -62,34 +87,19 @@ public class WeatherViewController extends BaseController implements Initializab
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setUpCities();
-        setUpChangeCityChoiceBoxListener();
-        setUpChangeCountryChoiceBoxListener();
-        setLastCheckedCountry();
-        setLastCheckedCity();
-    }
+        choiceBoxesHandlingObject = new ChoiceBoxesHandling(
+                weatherClient,
+                countriesList,
+                countiesCitiesMap,
+                countryChoiceBox,
+                cityChoiceBox
+        );
 
-    private void setLastCheckedCountry() {
-        City lastCheckedCity = weatherClient.getLastCheckedCity();
-        if (lastCheckedCity != null) {
-            countryChoiceBox.setValue(CustomLocales.findCountryByCity(lastCheckedCity));
-        }
-    }
-
-    private void setLastCheckedCity() {
-        City lastCheckedCity = weatherClient.getLastCheckedCity();
-        if (lastCheckedCity != null) {
-            cityChoiceBox.setValue(lastCheckedCity);
-        }
-    }
-
-    private void setUpCities() {
-        // Getting countries' list
-        countriesList.addAll(countiesCitiesMap.keySet());
-        countriesList = countriesList.sorted();
-
-        // Adding to choice boxes
-        countryChoiceBox.setItems(countriesList);
+        choiceBoxesHandlingObject.setUpCities();
+        choiceBoxesHandlingObject.setUpChangeCityChoiceBoxListener(cityChoiceBoxListener);
+        choiceBoxesHandlingObject.setUpChangeCountryChoiceBoxListener(countryChoiceBoxListener);
+        choiceBoxesHandlingObject.setLastCheckedCountry();
+        choiceBoxesHandlingObject.setLastCheckedCity();
     }
 
     private void showCurrentWeatherForCity(City city) {
@@ -98,33 +108,6 @@ public class WeatherViewController extends BaseController implements Initializab
         pressureValueLabel.setText(currentWeatherForCity.getPressure() + " " + currentWeatherForCity.getPressureUnit());
         humidityValueLabel.setText(currentWeatherForCity.getHumidity() + " " + currentWeatherForCity.getHumidityUnit());
         windSpeedValueLabel.setText(currentWeatherForCity.getWindSpeed() + " " + currentWeatherForCity.getWindSpeedUnit());
-    }
-
-    private void setUpChangeCityChoiceBoxListener() {
-        cityChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
-                if (newIndex.intValue() < 0) return;
-
-                String activeCountry = countryChoiceBox.getValue();
-                City newCity = countiesCitiesMap.get(activeCountry).get(newIndex.intValue());
-
-                showCurrentWeatherForCity(newCity);
-                showHourlyWeather(newCity);
-            }
-        });
-    }
-
-    private void setUpChangeCountryChoiceBoxListener() {
-        countryChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldIndex, Number newIndex) {
-                String newCountryName = countriesList.get(newIndex.intValue());
-                ObservableList<City> newCitiesList = countiesCitiesMap.get(newCountryName);
-
-                cityChoiceBox.setItems(newCitiesList);
-            }
-        });
     }
 
     private void showHourlyWeather(City cityObj) {
@@ -147,7 +130,9 @@ public class WeatherViewController extends BaseController implements Initializab
             String description = hourlyWeatherDto.getDescription();
 
             // Creating the grid elements
-            VBox gridViewHour = new VBox(new Label(hour));
+            Label hourLabel = new Label(hour);
+            hourLabel.getStyleClass().add("record-header");
+            VBox gridViewHour = new VBox(hourLabel);
 
             ImageView iconImage = weatherClient.getWeatherIcon(iconCode);
             iconImage.setFitWidth(50D);
@@ -213,14 +198,5 @@ public class WeatherViewController extends BaseController implements Initializab
         hourlyWeatherChart.getData().clear();
         hourlyWeatherChart.layout();
         hourlyWeatherChart.getData().addAll(temperatureSeries, uviSeries);
-    }
-
-    private City findCityByName(String cityName) {
-        String activeCountry = countryChoiceBox.getValue();
-        ObservableList<City> activeCitiesList = countiesCitiesMap.get(activeCountry);
-        for (City cityObj : activeCitiesList) {
-            if (cityName.equals(cityObj.getName())) return cityObj;
-        }
-        return null;
     }
 }

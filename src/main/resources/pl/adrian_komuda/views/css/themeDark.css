@@ -32,6 +32,11 @@
     -fx-my-default-bar-chart-color-data0: #ff9b4f;
     -fx-my-default-bar-chart-color-data1: #f7ff80;
 
+    fx-my-scroll-thumb-color: #4e4e4e;
+
+    -fx-my-text-color-records-day: #d4d95f;
+    -fx-my-text-color-records-night: #a0a0a0;
+
     -fx-my-default-items-color-showing: #ff800040;
     -fx-my-default-items-color-hover: #686868;
     -fx-my-default-border-color: #505050;
@@ -61,6 +66,10 @@ Button, ToggleButton, Label, ChoiceBox, Slider, MenuBar .label, .label {
 
 .error-label {
     -fx-text-fill: -fx-my-error-text-fill;
+}
+
+.record-header {
+    -fx-text-fill: -fx-my-font-header-color;
 }
 
 .context-menu {
@@ -238,7 +247,6 @@ MenuBar .menu-item:focused {
     -fx-background-color: -fx-my-table-cells-background-color;
     -fx-background-insets: 0, 0 0 0 0;
     -fx-table-cell-border-color: -fx-my-table-cells-border-color;
-    /*-fx-border-color: -fx-my-table-cells-border-color;*/
 }
 
 .table-row-cell:odd {
@@ -312,7 +320,7 @@ MenuBar .menu-item:focused {
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color: #4e4e4e;
+    -fx-background-color: fx-my-scroll-thumb-color;
     -fx-background-radius: 5px;
 }
 
@@ -333,4 +341,25 @@ SplitPane:horizontal > .split-pane-divider {
 }
 SplitPane:vertical > .split-pane-divider {
    -fx-background-color: -fx-default-pane-divider;
+}
+
+/*
+ * Weekly forecast
+ */
+.one-day-record-vbox {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: -fx-my-default-border-color;
+}
+
+.header-vbox-weekly-forecast {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -fx-my-default-border-color;
+}
+
+.record-day {
+    -fx-text-fill: -fx-my-text-color-records-day;
+}
+
+.record-night {
+    -fx-text-fill: -fx-my-text-color-records-night;
 }

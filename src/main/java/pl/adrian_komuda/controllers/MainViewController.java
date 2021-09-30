@@ -35,4 +35,9 @@ public class MainViewController extends BaseController {
     void leftPanelButtonOptionsOnAction() {
         ViewFactory.switchCenterViewToOptions();
     }
+
+    @FXML
+    void leftPanelButtonWeeklyForecastOnAction() {
+        ViewFactory.switchCenterViewToWeeklyForecastView();
+    }
 }
