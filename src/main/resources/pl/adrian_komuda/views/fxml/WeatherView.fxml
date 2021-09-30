@@ -60,7 +60,7 @@
          <children>
             <VBox alignment="TOP_CENTER">
                <children>
-                  <Label text="Temperature" />
+                  <Label styleClass="record-header" text="Temperature" />
                   <Label fx:id="temperatureValueLabel" text="Value" />
                </children>
                <padding>
@@ -69,7 +69,7 @@
             </VBox>
             <VBox alignment="TOP_CENTER" GridPane.columnIndex="1">
                <children>
-                  <Label text="Pressure" />
+                  <Label styleClass="record-header" text="Pressure" />
                   <Label fx:id="pressureValueLabel" text="Value" />
                </children>
                <padding>
@@ -78,7 +78,7 @@
             </VBox>
             <VBox alignment="TOP_CENTER" GridPane.rowIndex="1">
                <children>
-                  <Label text="Humidity" />
+                  <Label styleClass="record-header" text="Humidity" />
                   <Label fx:id="humidityValueLabel" text="Value" />
                </children>
                <padding>
@@ -87,7 +87,7 @@
             </VBox>
             <VBox alignment="TOP_CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Label text="Wind speed" />
+                  <Label styleClass="record-header" text="Wind speed" />
                   <Label fx:id="windSpeedValueLabel" text="Value" />
                </children>
                <padding>
