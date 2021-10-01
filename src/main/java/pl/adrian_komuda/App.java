@@ -1,13 +1,10 @@
 package pl.adrian_komuda;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import pl.adrian_komuda.views.ViewFactory;
+import pl.adrian_komuda.Views.ViewFactory;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -24,7 +21,6 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         Locale.setDefault(new Locale("en"));
         ViewFactory.showMainWindow();
-//        ViewFactory.switchCenterViewToAddDeleteLocaleView();
     }
 
     public static void main(String[] args) {

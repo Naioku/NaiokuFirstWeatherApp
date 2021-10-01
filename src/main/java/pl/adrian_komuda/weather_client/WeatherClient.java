@@ -6,8 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.springframework.web.client.RestTemplate;
 import pl.adrian_komuda.Config;
-import pl.adrian_komuda.Debug;
-import pl.adrian_komuda.model.*;
+import pl.adrian_komuda.Model.*;
 import pl.adrian_komuda.weather_client.data_transfer_objects.*;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package pl.adrian_komuda.views;
+package pl.adrian_komuda.Views;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +14,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import pl.adrian_komuda.App;
-import pl.adrian_komuda.controllers.*;
-import pl.adrian_komuda.model.ColorTheme;
-import pl.adrian_komuda.model.FontSize;
+import pl.adrian_komuda.Controllers.*;
+import pl.adrian_komuda.Controllers.Persistence.ColorThemeToFile;
+import pl.adrian_komuda.Controllers.Persistence.FontSizeToFile;
+import pl.adrian_komuda.Controllers.Persistence.PersistenceAccess;
+import pl.adrian_komuda.Model.ColorTheme;
+import pl.adrian_komuda.Model.FontSize;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.io.IOException;
@@ -31,9 +34,27 @@ public class ViewFactory {
     private static final WeatherClient weatherClientHomePanel = new WeatherClient();
     private static final WeatherClient weatherClientAnotherPanel = new WeatherClient();
 
-    private static ColorTheme colorTheme = ColorTheme.DARK;
-    private static FontSize fontSize = FontSize.MEDIUM;
+    private static ColorTheme colorTheme;
+    private static FontSize fontSize;
     private static List<Stage> activeStages = new ArrayList<>();
+
+    static {
+        FontSizeToFile fontSizeToFile = (FontSizeToFile) PersistenceAccess.loadDataFromFile(new FontSizeToFile());
+        if (fontSizeToFile == null) {
+            ViewFactory.fontSize = FontSize.MEDIUM;
+        }
+        else {
+            ViewFactory.fontSize = fontSizeToFile.getFontSize();
+        }
+
+        ColorThemeToFile colorThemeToFile = (ColorThemeToFile) PersistenceAccess.loadDataFromFile(new ColorThemeToFile());
+        if (colorThemeToFile == null) {
+            ViewFactory.colorTheme = ColorTheme.DARK;
+        }
+        else {
+            ViewFactory.colorTheme = colorThemeToFile.getColorTheme();
+        }
+    }
 
     public static ColorTheme getColorTheme() {
         return colorTheme;
@@ -45,10 +66,12 @@ public class ViewFactory {
 
     public static void setColorTheme(ColorTheme colorTheme) {
         ViewFactory.colorTheme = colorTheme;
+        PersistenceAccess.saveDataToFile(new ColorThemeToFile(ViewFactory.colorTheme));
     }
 
     public static void setFontSize(FontSize fontSize) {
         ViewFactory.fontSize = fontSize;
+        PersistenceAccess.saveDataToFile(new FontSizeToFile(ViewFactory.fontSize));
     }
 
     public static Parent loadFXML(BaseController controller) {
@@ -85,8 +108,8 @@ public class ViewFactory {
         VBox topArea = (VBox) loadFXML(weeklyForecastTop);
         VBox bottomArea = (VBox) loadFXML(weeklyForecastBottom);
 
-        setHeaderLabelName2(topArea, "Home city");
-        setHeaderLabelName2(bottomArea, "Chosen city");
+        setHeaderLabelName(topArea, "Home city");
+        setHeaderLabelName(bottomArea, "Chosen city");
 
         splitPane.getItems().addAll(topArea, bottomArea);
         MAIN_VIEW.setCenter(splitPane);
@@ -101,20 +124,20 @@ public class ViewFactory {
         VBox leftArea = (VBox) loadFXML(weatherLeftViewController);
         VBox rightArea = (VBox) loadFXML(weatherRightViewController);
 
-        setHeaderLabelName2(leftArea, "Home city");
-        setHeaderLabelName2(rightArea, "Chosen city");
+        setHeaderLabelName(leftArea, "Home city");
+        setHeaderLabelName(rightArea, "Chosen city");
 
         splitPane.getItems().addAll(leftArea, rightArea);
         MAIN_VIEW.setCenter(splitPane);
     }
 
-    private static void setHeaderLabelName2(Node nodeLevel0, String text) {
+    private static void setHeaderLabelName(Node nodeLevel0, String text) {
         if (nodeLevel0 instanceof Pane) {
             Pane area = (Pane) nodeLevel0;
             ObservableList<Node> childrenNodes = area.getChildren();
             if (childrenNodes != null) {
                 for (Node nodeLevel1 : childrenNodes) {
-                    setHeaderLabelName2(nodeLevel1, text);
+                    setHeaderLabelName(nodeLevel1, text);
                 }
             }
         }
@@ -127,37 +150,6 @@ public class ViewFactory {
             }
         }
     }
-
-//    private static void setHeaderLabelName(Pane area, String text) {
-//        Node headerVBox = getChildWithProvidedFxId(area, "headerVBox");
-//
-//        // For those headers wrapped with one additional HBox (Weekly forecast).
-//        if (headerVBox == null) {
-//            Node headerHBox = getChildWithProvidedFxId(area, "headerHBox");
-//            setHeaderLabelName((Pane) headerHBox, text);
-//        }
-//        // ==============================
-//
-//        if (headerVBox != null) {
-//            Node headerLabelNode = getChildWithProvidedFxId((Pane) headerVBox, "headerLabel");
-//            if (headerLabelNode != null) {
-//                Label textLabel = (Label) headerLabelNode;
-//                textLabel.setText(text);
-//            }
-//        }
-//    }
-//
-//    private static Node getChildWithProvidedFxId(Pane parentNode, String fxid) {
-//        ObservableList<Node> childrenNodes = parentNode.getChildren();
-//        for (Node child : childrenNodes) {
-//            String childFxId = child.getId();
-//            if (childFxId != null &&
-//                    childFxId.equals(fxid)) {
-//                return child;
-//            }
-//        }
-//        return null;
-//    }
 
     public static void switchCenterViewToAddDeleteLocaleView() {
         BaseController addDeleteLocaleViewController = new AddDeleteLocaleViewController("AddDeleteLocaleView");
@@ -175,7 +167,7 @@ public class ViewFactory {
         Scene aboutScene = new Scene(loadFXML(aboutViewController));
         aboutStage.setScene(aboutScene);
         aboutStage.setResizable(false);
-        aboutStage.initStyle(StageStyle.UTILITY);
+        aboutStage.initStyle(StageStyle.UNIFIED);
         aboutStage.show();
         aboutStage.onCloseRequestProperty().setValue(windowEvent -> activeStages.remove(aboutStage));
         activeStages.add(aboutStage);
@@ -190,5 +182,6 @@ public class ViewFactory {
             scene.getStylesheets().add(ViewFactory.class.getResource(colorTheme.getCssPath()).toExternalForm());
             scene.getStylesheets().add(ViewFactory.class.getResource(fontSize.getCssPath()).toExternalForm());
         }
+
     }
 }

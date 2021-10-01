@@ -26,13 +26,14 @@ public class ConvertingLocales {
         return response;
     }
 
+    /**
+     * Prints all possible locales in particular language and they shortcuts.
+     */
     public void printAllPossibleLocales() {
         System.out.println("==== Possible locales ====");
         for (Map.Entry<String, String> entry : countries.entrySet()) {
             System.out.println("\nkey: " + entry.getKey());
             System.out.println("value: " + entry.getValue());
         }
-
-
     }
 }

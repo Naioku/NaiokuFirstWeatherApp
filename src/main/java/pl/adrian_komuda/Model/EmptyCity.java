@@ -1,30 +1,36 @@
-package pl.adrian_komuda.model;
+package pl.adrian_komuda.Model;
 
-public class SpecificCity implements City {
-    private String name;
-    private float latitude;
-    private float longitude;
+public class EmptyCity implements City {
+    private final String name = "None";
+    private final float latitude = 0F;
+    private final float longitude = 0F;
 
+    @Override
     public void setName(String name) {
-        this.name = name;
+
     }
 
+    @Override
     public void setLatitude(float latitude) {
-        this.latitude = latitude;
+
     }
 
+    @Override
     public void setLongitude(float longitude) {
-        this.longitude = longitude;
+
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public float getLatitude() {
         return latitude;
     }
 
+    @Override
     public float getLongitude() {
         return longitude;
     }

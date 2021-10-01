@@ -1,4 +1,4 @@
-package pl.adrian_komuda.controllers;
+package pl.adrian_komuda.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import pl.adrian_komuda.HelpingMethods;
-import pl.adrian_komuda.model.WeeklyForecastDto;
+import pl.adrian_komuda.Model.WeeklyForecastDto;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.net.URL;

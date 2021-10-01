@@ -1,4 +1,4 @@
-package pl.adrian_komuda.model;
+package pl.adrian_komuda.Model;
 
 public enum ColorTheme {
     LIGHT("css/themeLight.css"),

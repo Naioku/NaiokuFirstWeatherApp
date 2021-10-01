@@ -1,8 +1,8 @@
-package pl.adrian_komuda.controllers;
+package pl.adrian_komuda.Controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import pl.adrian_komuda.views.ViewFactory;
+import pl.adrian_komuda.Views.ViewFactory;
 
 public class MainViewController extends BaseController {
 

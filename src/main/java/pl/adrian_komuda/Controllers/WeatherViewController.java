@@ -1,4 +1,4 @@
-package pl.adrian_komuda.controllers;
+package pl.adrian_komuda.Controllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,7 +18,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import pl.adrian_komuda.HelpingClasses.ChoiceBoxesHandling;
 import pl.adrian_komuda.HelpingMethods;
-import pl.adrian_komuda.model.*;
+import pl.adrian_komuda.Model.*;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.net.URL;

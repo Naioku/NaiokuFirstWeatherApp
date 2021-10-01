@@ -1,4 +1,4 @@
-package pl.adrian_komuda.controllers;
+package pl.adrian_komuda.Controllers;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -11,8 +11,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import pl.adrian_komuda.HelpingClasses.ConvertingLocales;
 import pl.adrian_komuda.HelpingClasses.CustomExceptions.NoSuchItemInMapException;
-import pl.adrian_komuda.model.City;
-import pl.adrian_komuda.model.CustomLocales;
+import pl.adrian_komuda.Model.City;
+import pl.adrian_komuda.Model.CustomLocales;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.net.URL;
@@ -54,6 +54,7 @@ public class AddDeleteLocaleViewController extends BaseController implements Ini
 
             City cityObj = weatherClient.getCityInfo(cityName, countryISO);
             CustomLocales.addLocale(treeView, countryName, cityObj);
+            CustomLocales.saveLocalesToFile();
 
         } catch (NoSuchItemInMapException e) {
             errorLabel.setText("You have probably made typo in adding new locale or entered names in language different from what You have been set.");
@@ -68,6 +69,7 @@ public class AddDeleteLocaleViewController extends BaseController implements Ini
     void deleteLocaleAction() {
         resetErrorLabel();
         CustomLocales.deleteLocale(treeView);
+        CustomLocales.saveLocalesToFile();
     }
 
     @FXML
