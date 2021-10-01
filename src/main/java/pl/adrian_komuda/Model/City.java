@@ -1,6 +1,8 @@
-package pl.adrian_komuda.model;
+package pl.adrian_komuda.Model;
 
-public interface City {
+import java.io.Serializable;
+
+public interface City extends Serializable {
     public void setName(String name);
 
     public void setLatitude(float latitude);

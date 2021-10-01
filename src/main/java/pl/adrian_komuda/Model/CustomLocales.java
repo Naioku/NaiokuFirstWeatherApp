@@ -1,8 +1,10 @@
-package pl.adrian_komuda.model;
+package pl.adrian_komuda.Model;
 
 import javafx.collections.*;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import pl.adrian_komuda.Controllers.Persistence.LocalesToFile;
+import pl.adrian_komuda.Controllers.Persistence.PersistenceAccess;
 
 import java.util.*;
 
@@ -10,7 +12,13 @@ public class CustomLocales {
     private static final ObservableMap<String, ObservableList<City>> countriesCitiesMap;
 
     static {
-        countriesCitiesMap = FXCollections.observableMap(new HashMap<>());
+        LocalesToFile localesToFile = (LocalesToFile) PersistenceAccess.loadDataFromFile(new LocalesToFile());
+        if (localesToFile == null) {
+            countriesCitiesMap = FXCollections.observableMap(new HashMap<>());
+        }
+        else {
+            countriesCitiesMap = localesToFile.getLocales();
+        }
     }
 
     /**
@@ -19,6 +27,11 @@ public class CustomLocales {
      */
     public static void boundCustomLocalesWithTreeView(TreeView<String> treeView) {
         addCountriesCitiesMapChangeListener(treeView);
+        if (!countriesCitiesMap.isEmpty()) {
+            for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
+                addCitiesListChangeListener(treeView, entry.getValue());
+            }
+        }
         refreshTreeView(treeView); // It is important, because the map have to be added to treeView on every load the add/delete view!
     }
 
@@ -55,6 +68,10 @@ public class CustomLocales {
         for (String country : countriesList) {
             addCountryWithCitiesToTheTreeView(treeView, country, countriesCitiesMap.get(country).sorted(), root);
         }
+    }
+
+    public static void saveLocalesToFile() {
+        PersistenceAccess.saveDataToFile(new LocalesToFile(countriesCitiesMap));
     }
 
     private static void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities, TreeItem<String> root) {

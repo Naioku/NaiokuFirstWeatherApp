@@ -1,4 +1,4 @@
-package pl.adrian_komuda.controllers;
+package pl.adrian_komuda.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -6,9 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.util.StringConverter;
-import pl.adrian_komuda.model.ColorTheme;
-import pl.adrian_komuda.model.FontSize;
-import pl.adrian_komuda.views.ViewFactory;
+import pl.adrian_komuda.Model.ColorTheme;
+import pl.adrian_komuda.Model.FontSize;
+import pl.adrian_komuda.Views.ViewFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;

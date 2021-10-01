@@ -1,22 +1,20 @@
-package pl.adrian_komuda.controllers;
+package pl.adrian_komuda.Controllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import pl.adrian_komuda.HelpingClasses.ChoiceBoxesHandling;
-import pl.adrian_komuda.model.City;
-import pl.adrian_komuda.model.CustomLocales;
-import pl.adrian_komuda.model.WeeklyForecastDto;
-import pl.adrian_komuda.views.ViewFactory;
+import pl.adrian_komuda.Model.City;
+import pl.adrian_komuda.Model.CustomLocales;
+import pl.adrian_komuda.Model.WeeklyForecastDto;
+import pl.adrian_komuda.Views.ViewFactory;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
 import java.net.URL;
