@@ -39,7 +39,7 @@
                   <Label text="Available languages:" GridPane.rowIndex="3" />
                   <Label text="Author:" />
                   <Label text="Version" GridPane.rowIndex="4" />
-                  <Label prefWidth="387.0" text="1.0" textAlignment="JUSTIFY" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label prefWidth="387.0" text="1.1" textAlignment="JUSTIFY" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
             <Label text="Short description of all views" underline="true" />
