@@ -23,7 +23,7 @@ public class PersistenceAccess {
     public static void saveDataToFile(ObjectToSave objectToSave) {
         try {
             File directory = new File(objectToSave.getDirectoryLocation());
-            directory.mkdir();
+            directory.mkdirs();
 
             File file = new File(objectToSave.getFileLocation());
             FileOutputStream fileOutputStream = new FileOutputStream(file);
