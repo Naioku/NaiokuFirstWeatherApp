@@ -36,7 +36,7 @@ public class ViewFactory {
 
     private static ColorTheme colorTheme;
     private static FontSize fontSize;
-    private static List<Stage> activeStages = new ArrayList<>();
+    private static final List<Stage> activeStages = new ArrayList<>();
 
     static {
         FontSizeToFile fontSizeToFile = (FontSizeToFile) PersistenceAccess.loadDataFromFile(new FontSizeToFile());
@@ -75,7 +75,7 @@ public class ViewFactory {
     }
 
     public static Parent loadFXML(BaseController controller) {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("views/fxml/" + controller.getFxmlName() + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("Views/fxml/" + controller.getFxmlName() + ".fxml"));
         fxmlLoader.setController(controller);
         try {
             return fxmlLoader.load();
