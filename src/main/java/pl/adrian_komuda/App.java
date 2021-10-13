@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import pl.adrian_komuda.Views.ViewFactory;
+import pl.adrian_komuda.views.ViewFactory;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -14,11 +14,8 @@ import java.util.Locale;
  */
 public class App extends Application {
 
-    private static Scene scene;
-    private static BorderPane mainView;
-
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         Locale.setDefault(new Locale("en"));
         ViewFactory.showMainWindow();
     }

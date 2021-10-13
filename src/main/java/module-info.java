@@ -5,11 +5,14 @@ module pl.adrian_komuda {
     requires com.fasterxml.jackson.databind;
 
     opens pl.adrian_komuda;
-    opens pl.adrian_komuda.Controllers;
-    opens pl.adrian_komuda.Controllers.Persistence;
-    opens pl.adrian_komuda.Model;
+    opens pl.adrian_komuda.controllers;
+    opens pl.adrian_komuda.controllers.persistence;
+    opens pl.adrian_komuda.model;
     opens pl.adrian_komuda.weather_client;
-    opens pl.adrian_komuda.weather_client.data_transfer_objects;
+    opens pl.adrian_komuda.weather_client.api_dtos;
+    opens pl.adrian_komuda.utilities;
     exports pl.adrian_komuda;
-
+    exports pl.adrian_komuda.utilities;
+    exports pl.adrian_komuda.utilities.custom_exceptions;
+    opens pl.adrian_komuda.weather_client.my_dtos;
 }

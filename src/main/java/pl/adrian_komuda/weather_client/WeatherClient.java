@@ -6,26 +6,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.springframework.web.client.RestTemplate;
 import pl.adrian_komuda.Config;
-import pl.adrian_komuda.Model.*;
-import pl.adrian_komuda.weather_client.data_transfer_objects.*;
+import pl.adrian_komuda.utilities.custom_exceptions.ApiException;
+import pl.adrian_komuda.weather_client.api_dtos.*;
+import pl.adrian_komuda.weather_client.my_dtos.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherClient {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
-    private final String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
+    private final static String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
+    private final static String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
 
     private City lastCheckedCity;
-
-    public WeatherClient() {}
 
     public City getLastCheckedCity() {
         return lastCheckedCity;
     }
 
-    public WeatherDto getCurrentWeatherData(City city) {
+    public WeatherDto getCurrentWeatherData(City city) throws ApiException {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "weather?q={city}&appid={apiKey}&units=metric",
                 String.class,
@@ -33,25 +32,27 @@ public class WeatherClient {
                 Config.API_KEY
         );
 
-        WeatherDto weatherDto = new WeatherDto();
+        WeatherDto weatherDto;
 
         try {
             OpenWeatherWeatherDto openWeatherWeatherDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherWeatherDto.class);
-            weatherDto.setTemperature(openWeatherWeatherDto.getTemp());
-            weatherDto.setPressure(openWeatherWeatherDto.getPressure());
-            weatherDto.setHumidity(openWeatherWeatherDto.getHumidity());
-            weatherDto.setWindSpeed(openWeatherWeatherDto.getSpeed());
+            weatherDto = new WeatherDto(
+                    openWeatherWeatherDto.getTemp(),
+                    openWeatherWeatherDto.getPressure(),
+                    openWeatherWeatherDto.getHumidity(),
+                    openWeatherWeatherDto.getSpeed()
+            );
 
         } catch (JsonProcessingException e) {
-            System.out.println("Error in converting json to object!");
             e.printStackTrace();
+            throw new ApiException();
         }
 
         lastCheckedCity = city;
         return weatherDto;
     }
 
-    public List<HourlyWeatherDto> getHourlyWeatherForecastData(City city) {
+    public List<HourlyWeatherDto> getHourlyWeatherForecastData(City city) throws ApiException {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "onecall?lat={lat}&lon={lon}&exclude=current,minutely,daily,alerts&appid={apiKey}&units=metric",
                 String.class,
@@ -78,15 +79,15 @@ public class WeatherClient {
             }
 
         } catch (JsonProcessingException e) {
-            System.out.println("Error in converting json to object!");
             e.printStackTrace();
+            throw new ApiException();
         }
 
         lastCheckedCity = city;
         return hourlyWeatherDtos;
     }
 
-    public List<WeeklyForecastDto> getWeeklyWeatherForecastData(City city) {
+    public List<WeeklyForecastDto> getWeeklyWeatherForecastData(City city) throws ApiException {
         String jsonResponse = restTemplate.getForObject(
                 WEATHER_URL + "onecall?lat={lat}&lon={lon}&exclude=current,minutely,alerts&appid={apiKey}&units=metric",
                 String.class,
@@ -95,7 +96,7 @@ public class WeatherClient {
                 Config.API_KEY
         );
 
-        List<WeeklyForecastDto> weeklyForecastDtos = new ArrayList<>();
+        List<WeeklyForecastDto> weeklyForecastDtoList = new ArrayList<>();
 
         try {
             OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
@@ -115,19 +116,19 @@ public class WeatherClient {
                         openWeatherDto.getIcon()
                 );
 
-                weeklyForecastDtos.add(weeklyForecastDto);
+                weeklyForecastDtoList.add(weeklyForecastDto);
             }
 
         } catch (JsonProcessingException e) {
-            System.out.println("Error in converting json to object!");
             e.printStackTrace();
+            throw new ApiException();
         }
 
         lastCheckedCity = city;
-        return weeklyForecastDtos;
+        return weeklyForecastDtoList;
     }
 
-    public City getCityInfo(String city, String countryISOCode) throws ArrayIndexOutOfBoundsException {
+    public City getCityInfo(String city, String countryISOCode) throws ArrayIndexOutOfBoundsException, ApiException {
         String jsonResponse = restTemplate.getForObject(
                 GEO_URL + "direct?q={city},{countryCode}&appid={apiKey}",
                 String.class,
@@ -136,18 +137,19 @@ public class WeatherClient {
                 Config.API_KEY
         );
 
-        City cityObj = new SpecificCity();
+        City cityObj;
 
         try {
             OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
-            cityObj.setName(city);
-            cityObj.setLatitude(openWeatherGeocodingCityDto[0].getLat());
-            cityObj.setLongitude(openWeatherGeocodingCityDto[0].getLon());
-
+            cityObj = new SpecificCity(
+                    city,
+                    openWeatherGeocodingCityDto[0].getLat(),
+                    openWeatherGeocodingCityDto[0].getLon()
+            );
         } catch (JsonProcessingException e) {
             System.out.println("Error in converting json to object!");
-            cityObj = new EmptyCity();
             e.printStackTrace();
+            throw new ApiException();
         }
 
         return cityObj;
