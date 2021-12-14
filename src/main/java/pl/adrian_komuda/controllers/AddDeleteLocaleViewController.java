@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
-import pl.adrian_komuda.utilities.ConvertingLocales;
+import pl.adrian_komuda.utilities.ConvertingCountryNames;
 import pl.adrian_komuda.utilities.ErrorMessages;
 import pl.adrian_komuda.utilities.custom_exceptions.ApiException;
 import pl.adrian_komuda.weather_client.my_dtos.City;
@@ -47,10 +47,10 @@ public class AddDeleteLocaleViewController extends BaseController implements Ini
         String countryName = countryTextField.getText();
         String cityName = cityTextField.getText();
 
-        ConvertingLocales convertingLocales = new ConvertingLocales();
+        ConvertingCountryNames convertingCountryNames = new ConvertingCountryNames();
 
         try {
-            String countryISO = convertingLocales.convertNameToISO(countryName);
+            String countryISO = convertingCountryNames.convertNameToISO(countryName);
             WeatherClient weatherClient = new WeatherClient();
 
             City cityObj = weatherClient.getCityInfo(cityName, countryISO);
