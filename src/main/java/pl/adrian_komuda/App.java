@@ -17,11 +17,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         Locale.setDefault(new Locale("en"));
-        ViewFactory.showMainWindow();
+        ViewFactory.showMainWindow(stage);
     }
 
     public static void main(String[] args) {
         launch();
     }
-
 }

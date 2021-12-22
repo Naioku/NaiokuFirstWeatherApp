@@ -2,9 +2,13 @@ package pl.adrian_komuda.controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ToggleButton;
 import pl.adrian_komuda.views.ViewFactory;
 
 public class MainViewController extends BaseController {
+
+    @FXML
+    private ToggleButton optionsButton;
 
     public MainViewController(String fxmlName) {
         super(fxmlName);

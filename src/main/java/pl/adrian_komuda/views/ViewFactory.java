@@ -36,7 +36,6 @@ public class ViewFactory {
 
     private static final BorderPane MAIN_VIEW = (BorderPane) loadFXML(new MainViewController("MainView"));
     private static final Scene SCENE = new Scene(MAIN_VIEW);
-    private static final Stage STAGE = new Stage();
 
     private static final WeatherClient WEATHER_CLIENT_HOME_PANEL = new WeatherClient();
     private static final WeatherClient WEATHER_CLIENT_ANOTHER_PANEL = new WeatherClient();
@@ -113,14 +112,14 @@ public class ViewFactory {
         }
     }
 
-    public static void showMainWindow() {
+    public static void showMainWindow(Stage primaryStage) {
         switchCenterViewToWeatherView();
-        STAGE.setScene(SCENE);
-        STAGE.setMinWidth(MAIN_WINDOW_WIDTH);
-        STAGE.setMinHeight(MAIN_WINDOW_HEIGHT);
-        STAGE.setMaximized(false);
-        STAGE.show();
-        ACTIVE_STAGES.add(STAGE);
+        primaryStage.setScene(SCENE);
+        primaryStage.setMinWidth(MAIN_WINDOW_WIDTH);
+        primaryStage.setMinHeight(MAIN_WINDOW_HEIGHT);
+        primaryStage.setMaximized(false);
+        primaryStage.show();
+        ACTIVE_STAGES.add(primaryStage);
         updateStyles();
     }
 
