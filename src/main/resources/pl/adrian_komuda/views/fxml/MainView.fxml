@@ -34,7 +34,7 @@
                   <ToggleGroup fx:id="switchView" />
                </toggleGroup>
             </ToggleButton>
-            <ToggleButton minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonAddDeleteLocaleOnAction" prefWidth="150.0" text="Add/delete a locale" textAlignment="CENTER" toggleGroup="$switchView" wrapText="true" />
+            <ToggleButton fx:id="addDeleteLocale" minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonAddDeleteLocaleOnAction" prefWidth="150.0" text="Add/delete a locale" textAlignment="CENTER" toggleGroup="$switchView" wrapText="true" />
             <ToggleButton fx:id="optionsButton" minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonOptionsOnAction" prefWidth="150.0" text="Options" textAlignment="CENTER" toggleGroup="$switchView" />
             <ToggleButton minHeight="50.0" mnemonicParsing="false" onAction="#leftPanelButtonWeeklyForecastOnAction" prefWidth="150.0" text="Weekly forecast" textAlignment="CENTER" toggleGroup="$switchView" />
          </children>

@@ -45,7 +45,7 @@ public class CustomLocations {
         refreshTreeView(treeView); // It is important, because the map have to be added to treeView on every load the add/delete view!
     }
 
-    public static void addLocale(TreeView<String> treeView, String country, City city) {
+    public static void addLocation(TreeView<String> treeView, String country, City city) {
         ObservableList<City> cities = countriesCitiesMap.get(country);
 
         if (cities == null) {

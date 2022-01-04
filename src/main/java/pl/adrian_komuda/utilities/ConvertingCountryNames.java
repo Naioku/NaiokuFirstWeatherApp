@@ -8,6 +8,13 @@ public class ConvertingCountryNames {
     Map<String, String> countries;
 
     public ConvertingCountryNames() {
+        setupCountries();
+    }
+
+    /**
+     * Use it, when user changes the Locale.
+     */
+    public void setupCountries() {
         this.countries = new HashMap<>();
 
         for (String iso : Locale.getISOCountries()) {

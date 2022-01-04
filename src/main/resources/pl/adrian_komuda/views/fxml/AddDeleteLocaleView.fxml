@@ -43,7 +43,7 @@
                                     <TextField fx:id="cityTextField" />
                                  </children>
                               </VBox>
-                              <Button minHeight="30.0" minWidth="88.0" mnemonicParsing="false" onAction="#addLocaleAction" text="Add">
+                              <Button fx:id="applyButton" minHeight="30.0" minWidth="88.0" mnemonicParsing="false" onAction="#addLocaleAction" text="Add">
                                  <VBox.margin>
                                     <Insets top="10.0" />
                                  </VBox.margin>

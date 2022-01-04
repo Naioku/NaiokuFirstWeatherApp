@@ -20,6 +20,7 @@ import pl.adrian_komuda.controllers.persistence.FontSizeToFile;
 import pl.adrian_komuda.controllers.persistence.PersistenceAccess;
 import pl.adrian_komuda.model.ColorTheme;
 import pl.adrian_komuda.model.FontSize;
+import pl.adrian_komuda.utilities.ConvertingCountryNames;
 import pl.adrian_komuda.utilities.ErrorDialogsContent;
 import pl.adrian_komuda.weather_client.WeatherClient;
 
@@ -178,7 +179,10 @@ public class ViewFactory {
     }
 
     public static void switchCenterViewToAddDeleteLocaleView() {
-        BaseController addDeleteLocaleViewController = new AddDeleteLocaleViewController("AddDeleteLocaleView");
+        BaseController addDeleteLocaleViewController = new AddDeleteLocationViewController(
+                "AddDeleteLocaleView",
+                new ConvertingCountryNames(),
+                new WeatherClient());
         MAIN_VIEW.setCenter(loadFXML(addDeleteLocaleViewController));
     }
 

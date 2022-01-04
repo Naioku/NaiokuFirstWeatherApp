@@ -19,7 +19,10 @@ import pl.adrian_komuda.weather_client.WeatherClient;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AddDeleteLocaleViewController extends BaseController implements Initializable {
+public class AddDeleteLocationViewController extends BaseController implements Initializable {
+
+    ConvertingCountryNames convertingCountryNames = new ConvertingCountryNames();
+    WeatherClient weatherClient = new WeatherClient();
 
     @FXML
     private TextField countryTextField;
@@ -36,8 +39,14 @@ public class AddDeleteLocaleViewController extends BaseController implements Ini
     @FXML
     private Label errorLabel;
 
-    public AddDeleteLocaleViewController(String fxmlName) {
+    public AddDeleteLocationViewController(
+            String fxmlName,
+            ConvertingCountryNames convertingCountryNames,
+            WeatherClient weatherClient) {
+
         super(fxmlName);
+        this.convertingCountryNames = convertingCountryNames;
+        this.weatherClient = weatherClient;
     }
 
     @FXML
@@ -47,14 +56,13 @@ public class AddDeleteLocaleViewController extends BaseController implements Ini
         String countryName = countryTextField.getText();
         String cityName = cityTextField.getText();
 
-        ConvertingCountryNames convertingCountryNames = new ConvertingCountryNames();
+        convertingCountryNames = new ConvertingCountryNames();
+        weatherClient = new WeatherClient();
 
         try {
             String countryISO = convertingCountryNames.convertNameToISO(countryName);
-            WeatherClient weatherClient = new WeatherClient();
-
             City cityObj = weatherClient.getCityInfo(cityName, countryISO);
-            CustomLocations.addLocale(treeView, countryName, cityObj);
+            CustomLocations.addLocation(treeView, countryName, cityObj);
             CustomLocations.saveLocationsToFile();
 
         } catch (IllegalArgumentException e) {
@@ -138,5 +146,13 @@ public class AddDeleteLocaleViewController extends BaseController implements Ini
 
     private void resetErrorLabel() {
         errorLabel.setText("FINE");
+    }
+
+    public void setConvertingCountryNames(ConvertingCountryNames convertingCountryNames) {
+        this.convertingCountryNames = convertingCountryNames;
+    }
+
+    public void setWeatherClient(WeatherClient weatherClient) {
+        this.weatherClient = weatherClient;
     }
 }
