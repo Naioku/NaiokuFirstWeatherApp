@@ -9,20 +9,21 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import pl.adrian_komuda.model.CustomLocations;
 import pl.adrian_komuda.utilities.ConvertingCountryNames;
 import pl.adrian_komuda.utilities.ErrorMessages;
 import pl.adrian_komuda.utilities.custom_exceptions.ApiException;
-import pl.adrian_komuda.weather_client.my_dtos.City;
-import pl.adrian_komuda.model.CustomLocations;
 import pl.adrian_komuda.weather_client.WeatherClient;
+import pl.adrian_komuda.weather_client.my_dtos.City;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AddDeleteLocationViewController extends BaseController implements Initializable {
 
-    ConvertingCountryNames convertingCountryNames = new ConvertingCountryNames();
-    WeatherClient weatherClient = new WeatherClient();
+    ConvertingCountryNames convertingCountryNames;
+    WeatherClient weatherClient;
+    CustomLocations customLocations;
 
     @FXML
     private TextField countryTextField;
@@ -39,14 +40,16 @@ public class AddDeleteLocationViewController extends BaseController implements I
     @FXML
     private Label errorLabel;
 
-    public AddDeleteLocationViewController(
+    public AddDeleteLocationViewController (
             String fxmlName,
             ConvertingCountryNames convertingCountryNames,
-            WeatherClient weatherClient) {
+            WeatherClient weatherClient,
+            CustomLocations customLocations) {
 
         super(fxmlName);
         this.convertingCountryNames = convertingCountryNames;
         this.weatherClient = weatherClient;
+        this.customLocations = customLocations;
     }
 
     @FXML
@@ -56,14 +59,11 @@ public class AddDeleteLocationViewController extends BaseController implements I
         String countryName = countryTextField.getText();
         String cityName = cityTextField.getText();
 
-        convertingCountryNames = new ConvertingCountryNames();
-        weatherClient = new WeatherClient();
-
         try {
             String countryISO = convertingCountryNames.convertNameToISO(countryName);
             City cityObj = weatherClient.getCityInfo(cityName, countryISO);
-            CustomLocations.addLocation(treeView, countryName, cityObj);
-            CustomLocations.saveLocationsToFile();
+            customLocations.addLocation(treeView, countryName, cityObj);
+            customLocations.saveLocationsToFile();
 
         } catch (IllegalArgumentException e) {
             errorLabel.setText(ErrorMessages.WEATHER_API_TYPO_IN_ADDING_LOCATION);
@@ -80,18 +80,18 @@ public class AddDeleteLocationViewController extends BaseController implements I
     @FXML
     void deleteLocaleAction() {
         resetErrorLabel();
-        CustomLocations.deleteLocale(treeView);
-        CustomLocations.saveLocationsToFile();
+        customLocations.deleteLocation(treeView);
+        customLocations.saveLocationsToFile();
     }
 
     @FXML
     void refreshAction() {
-        CustomLocations.refreshTreeView(treeView);
+        customLocations.refreshTreeView(treeView);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        CustomLocations.boundCustomLocationsWithTreeView(treeView);
+        customLocations.boundCustomLocationsWithTreeView(treeView);
         prepareTableViewToShowingTheCityValues();
         addMouseClickListener();
     }
@@ -123,14 +123,14 @@ public class AddDeleteLocationViewController extends BaseController implements I
 
             if (isCountry(selectedItem)) {
                 String countryName = selectedItem.getValue();
-                ObservableList<City> cityObjects = CustomLocations.getCitiesByCountry(countryName);
+                ObservableList<City> cityObjects = customLocations.getCitiesByCountry(countryName);
 
                 tableView.getItems().addAll(cityObjects.sorted());
             } else {
                 String cityName = selectedItem.getValue();
                 String countryName = selectedItem.getParent().getValue();
-                ObservableList<City> cities = CustomLocations.getCitiesByCountry(countryName);
-                City cityObj = CustomLocations.findCityInList(cityName, cities);
+                ObservableList<City> cities = customLocations.getCitiesByCountry(countryName);
+                City cityObj = customLocations.findCityInList(cityName, cities);
 
                 tableView.getItems().add(cityObj);
             }

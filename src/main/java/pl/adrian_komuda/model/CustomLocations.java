@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class CustomLocations {
-    private static final ObservableMap<String, ObservableList<City>> countriesCitiesMap;
 
-    static {
+    private static CustomLocations customLocations;
+    private final ObservableMap<String, ObservableList<City>> countriesCitiesMap;
+
+    private CustomLocations() {
         ObservableMap<String, ObservableList<City>> countriesCitiesMapTemp;
         try {
             LocationsToFile locationsToFile = (LocationsToFile) PersistenceAccess.loadDataFromFile(new LocationsToFile());
@@ -31,11 +33,19 @@ public class CustomLocations {
         countriesCitiesMap = countriesCitiesMapTemp;
     }
 
+    public static CustomLocations getCustomLocations() {
+        if (customLocations == null) {
+            customLocations = new CustomLocations();
+        }
+
+        return customLocations;
+    }
+
     /**
      * First method You need to run.
      * @param treeView - treeView object to upload.
      */
-    public static void boundCustomLocationsWithTreeView(TreeView<String> treeView) {
+    public void boundCustomLocationsWithTreeView(TreeView<String> treeView) {
         addCountriesCitiesMapChangeListener(treeView);
         if (!countriesCitiesMap.isEmpty()) {
             for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
@@ -45,7 +55,7 @@ public class CustomLocations {
         refreshTreeView(treeView); // It is important, because the map have to be added to treeView on every load the add/delete view!
     }
 
-    public static void addLocation(TreeView<String> treeView, String country, City city) {
+    public void addLocation(TreeView<String> treeView, String country, City city) {
         ObservableList<City> cities = countriesCitiesMap.get(country);
 
         if (cities == null) {
@@ -56,7 +66,7 @@ public class CustomLocations {
         countriesCitiesMap.put(country, cities);
     }
 
-    public static void deleteLocale(TreeView<String> treeView) {
+    public void deleteLocation(TreeView<String> treeView) {
         TreeItem<String> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
 
         if (selectedTreeItem.getChildren().isEmpty()) {
@@ -67,7 +77,7 @@ public class CustomLocations {
         }
     }
 
-    public static void refreshTreeView(TreeView<String> treeView) {
+    public void refreshTreeView(TreeView<String> treeView) {
         TreeItem<String> root = getRootFromTreeView(treeView);
         ObservableList<TreeItem<String>> countryTreeItemsList = root.getChildren();
         countryTreeItemsList.clear();
@@ -80,7 +90,7 @@ public class CustomLocations {
         }
     }
 
-    public static void saveLocationsToFile() {
+    public void saveLocationsToFile() {
         try {
             PersistenceAccess.saveDataToFile(new LocationsToFile(countriesCitiesMap));
         } catch (IOException e) {
@@ -89,13 +99,13 @@ public class CustomLocations {
         }
     }
 
-    private static void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities, TreeItem<String> root) {
+    private void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities, TreeItem<String> root) {
         addNewRecordToRoot(country, cities, root);
         treeView.setRoot(root);
         treeView.setShowRoot(false);
     }
 
-    private static TreeItem<String> getRootFromTreeView(TreeView<String> treeView) {
+    private TreeItem<String> getRootFromTreeView(TreeView<String> treeView) {
         TreeItem<String> root = treeView.getRoot();
         if (root == null) {
             root = new TreeItem<>("Root");
@@ -103,14 +113,14 @@ public class CustomLocations {
         return root;
     }
 
-    private static void addNewRecordToRoot(String country, ObservableList<City> cities, TreeItem<String> root) {
+    private void addNewRecordToRoot(String country, ObservableList<City> cities, TreeItem<String> root) {
         TreeItem<String> countryTreeItem = new TreeItem<>(country);
         addCitiesToCountryTreeItem(cities, countryTreeItem);
         root.getChildren().add(countryTreeItem);
     }
 
     // ======= COUNTRY LISTENER START ======= \\
-    private static void addCountriesCitiesMapChangeListener(TreeView<String> treeView) {
+    private void addCountriesCitiesMapChangeListener(TreeView<String> treeView) {
         countriesCitiesMap.addListener(new MapChangeListener<String, ObservableList<City>>() {
             @Override
             public void onChanged(Change<? extends String, ? extends ObservableList<City>> change) {
@@ -125,19 +135,19 @@ public class CustomLocations {
         });
     }
 
-    private static void removeCountryFromTheTreeView(TreeView<String> treeView) {
+    private void removeCountryFromTheTreeView(TreeView<String> treeView) {
         TreeItem<String> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
         selectedTreeItem.getParent().getChildren().remove(selectedTreeItem);
     }
 
-    private static void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities) {
+    private void addCountryWithCitiesToTheTreeView(TreeView<String> treeView, String country, ObservableList<City> cities) {
         TreeItem<String> root = getRootFromTreeView(treeView);
         addCountryWithCitiesToTheTreeView(treeView, country, cities, root);
     }
     // ======= COUNTRY LISTENER END ======= \\
 
     // ======= CITY LISTENER START ======= \\
-    private static void addCitiesListChangeListener(TreeView<String> treeView, ObservableList<City> cities) {
+    private void addCitiesListChangeListener(TreeView<String> treeView, ObservableList<City> cities) {
         cities.addListener(new ListChangeListener<City>() {
             @Override
             public void onChanged(Change<? extends City> change) {
@@ -152,7 +162,7 @@ public class CustomLocations {
         });
     }
 
-    private static void uploadCityTreeItemListToTheTreeView(TreeView<String> treeView, ListChangeListener.Change<? extends City> change) {
+    private void uploadCityTreeItemListToTheTreeView(TreeView<String> treeView, ListChangeListener.Change<? extends City> change) {
         Map.Entry<String, ObservableList<City>> countryCitiesEntry = findCountryCityEntrySetByList(change.getList());
         if (countryCitiesEntry == null) {
             return;
@@ -169,7 +179,7 @@ public class CustomLocations {
         addCitiesToCountryTreeItem(countryCitiesEntry.getValue(), countryTreeItem);
     }
 
-    private static Map.Entry<String, ObservableList<City>> findCountryCityEntrySetByList(ObservableList<? extends City> list) {
+    private Map.Entry<String, ObservableList<City>> findCountryCityEntrySetByList(ObservableList<? extends City> list) {
         for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
             if (entry.getValue().equals(list)) {
                 return entry;
@@ -178,7 +188,7 @@ public class CustomLocations {
         return null;
     }
 
-    private static TreeItem<String> findTreeItemInList(ObservableList<TreeItem<String>> treeItemList, String itemName) {
+    private TreeItem<String> findTreeItemInList(ObservableList<TreeItem<String>> treeItemList, String itemName) {
         for (TreeItem<String> treeItem : treeItemList) {
             if (treeItem.getValue().equals(itemName)) {
                 return treeItem;
@@ -188,7 +198,7 @@ public class CustomLocations {
     }
     // ======= CITY LISTENER END ======= \\
 
-    private static void addCitiesToCountryTreeItem(ObservableList<City> cities, TreeItem<String> countryTreeItem) {
+    private void addCitiesToCountryTreeItem(ObservableList<City> cities, TreeItem<String> countryTreeItem) {
         for (City city : cities) {
             TreeItem<String> cityTreeItem = new TreeItem<>(city.getName());
             countryTreeItem.getChildren().add(cityTreeItem);
@@ -196,12 +206,12 @@ public class CustomLocations {
     }
 
     // ======= MAP HANDLING START ======= \\
-    private static void removeCountryFromMap(TreeItem<String> selectedTreeItem) {
+    private void removeCountryFromMap(TreeItem<String> selectedTreeItem) {
         String countryName = selectedTreeItem.getValue();
         countriesCitiesMap.remove(countryName);
     }
 
-    private static void removeCityFromMap(TreeItem<String> cityTreeItem) {
+    private void removeCityFromMap(TreeItem<String> cityTreeItem) {
         TreeItem<String> countryTreeItem = cityTreeItem.getParent();
 
         String cityName = cityTreeItem.getValue();
@@ -217,11 +227,11 @@ public class CustomLocations {
         if (citiesList.isEmpty()) removeCountryFromMap(countryTreeItem);
     }
 
-    public static ObservableList<City> getCitiesByCountry(String country) {
+    public ObservableList<City> getCitiesByCountry(String country) {
         return countriesCitiesMap.get(country);
     }
 
-    public static City findCityInList(String cityName, ObservableList<City> citiesList) {
+    public City findCityInList(String cityName, ObservableList<City> citiesList) {
         for (City city : citiesList) {
             if (city.getName().equals(cityName)) {
                 return city;
@@ -230,7 +240,7 @@ public class CustomLocations {
         return null;
     }
 
-    public static String findCountryByCity(City cityObj) {
+    public String findCountryByCity(City cityObj) {
         for (Map.Entry<String, ObservableList<City>> entry : countriesCitiesMap.entrySet()) {
             for (City cityFromList : entry.getValue()) {
                 if (cityFromList.equals(cityObj)) {
@@ -242,7 +252,7 @@ public class CustomLocations {
     }
     // ======= MAP HANDLING END ======= \\
 
-    public static ObservableMap<String, ObservableList<City>> getCountriesCitiesMap(){
+    public ObservableMap<String, ObservableList<City>> getCountriesCitiesMap(){
         return countriesCitiesMap;
     }
 }

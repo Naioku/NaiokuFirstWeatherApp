@@ -16,6 +16,7 @@ public class ChoiceBoxesHandler {
 
     private final ChoiceBox<String> countryChoiceBox;
     private final ChoiceBox<City> cityChoiceBox;
+    private CustomLocations customLocations;
 
     public ChoiceBoxesHandler(
             WeatherClient weatherClient,
@@ -41,7 +42,7 @@ public class ChoiceBoxesHandler {
     private void setLastCheckedCountry() {
         City lastCheckedCity = weatherClient.getLastCheckedCity();
         if (lastCheckedCity != null) {
-            countryChoiceBox.setValue(CustomLocations.findCountryByCity(lastCheckedCity));
+            countryChoiceBox.setValue(customLocations.findCountryByCity(lastCheckedCity));
         }
     }
 

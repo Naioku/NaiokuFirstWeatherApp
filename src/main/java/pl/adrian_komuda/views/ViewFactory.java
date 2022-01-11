@@ -19,6 +19,7 @@ import pl.adrian_komuda.controllers.persistence.ColorThemeToFile;
 import pl.adrian_komuda.controllers.persistence.FontSizeToFile;
 import pl.adrian_komuda.controllers.persistence.PersistenceAccess;
 import pl.adrian_komuda.model.ColorTheme;
+import pl.adrian_komuda.model.CustomLocations;
 import pl.adrian_komuda.model.FontSize;
 import pl.adrian_komuda.utilities.ConvertingCountryNames;
 import pl.adrian_komuda.utilities.ErrorDialogsContent;
@@ -45,18 +46,20 @@ public class ViewFactory {
     private static FontSize FONT_SIZE;
     private static final List<Stage> ACTIVE_STAGES = new ArrayList<>();
 
+    private static ConvertingCountryNames convertingCountryNames = new ConvertingCountryNames();
+    private static WeatherClient weatherClient = new WeatherClient();
+    private static CustomLocations customLocations = CustomLocations.getCustomLocations();
+
+    public static void init(ConvertingCountryNames convertingCountryNames,
+                            WeatherClient weatherClient,
+                            CustomLocations customLocations) {
+        ViewFactory.convertingCountryNames = convertingCountryNames;
+        ViewFactory.weatherClient = weatherClient;
+        ViewFactory.customLocations = customLocations;
+    }
     static {
         FontSize fontSizeTemp;
-        try {
-            FontSizeToFile fontSizeToFile = (FontSizeToFile) PersistenceAccess.loadDataFromFile(new FontSizeToFile());
-            fontSizeTemp = fontSizeToFile.getFontSize();
-        } catch (FileNotFoundException e) {
             fontSizeTemp = FontSize.MEDIUM;
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-            fontSizeTemp = FontSize.MEDIUM;
-            ViewFactory.throwErrorDialog(ErrorDialogsContent.GENERAL, e);
-        }
         FONT_SIZE = fontSizeTemp;
 
         ColorTheme colorThemeTemp;
@@ -181,8 +184,9 @@ public class ViewFactory {
     public static void switchCenterViewToAddDeleteLocaleView() {
         BaseController addDeleteLocaleViewController = new AddDeleteLocationViewController(
                 "AddDeleteLocaleView",
-                new ConvertingCountryNames(),
-                new WeatherClient());
+                convertingCountryNames,
+                weatherClient,
+                customLocations);
         MAIN_VIEW.setCenter(loadFXML(addDeleteLocaleViewController));
     }
 
