@@ -147,12 +147,4 @@ public class AddDeleteLocationViewController extends BaseController implements I
     private void resetErrorLabel() {
         errorLabel.setText("FINE");
     }
-
-    public void setConvertingCountryNames(ConvertingCountryNames convertingCountryNames) {
-        this.convertingCountryNames = convertingCountryNames;
-    }
-
-    public void setWeatherClient(WeatherClient weatherClient) {
-        this.weatherClient = weatherClient;
-    }
 }

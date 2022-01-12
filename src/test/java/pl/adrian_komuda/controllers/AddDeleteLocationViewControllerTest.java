@@ -1,6 +1,10 @@
 package pl.adrian_komuda.controllers;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import org.junit.jupiter.api.AfterEach;
@@ -44,6 +48,7 @@ class AddDeleteLocationViewControllerTest {
         );
         WaitForAsyncUtils.waitForFxEvents();
 
+        fxRobot.clickOn("#addDeleteLocation");
     }
 
     @AfterEach
@@ -75,7 +80,6 @@ class AddDeleteLocationViewControllerTest {
         });
 
         // when
-        fxRobot.clickOn("#addDeleteLocale");
         fxRobot.clickOn("#applyButton");
 
         // then
@@ -89,7 +93,6 @@ class AddDeleteLocationViewControllerTest {
         given(convertingCountryNames.convertNameToISO(any(String.class))).willThrow(IllegalArgumentException.class);
 
         // when
-        fxRobot.clickOn("#addDeleteLocale");
         fxRobot.clickOn("#applyButton");
 
         // then
@@ -103,11 +106,78 @@ class AddDeleteLocationViewControllerTest {
         given(convertingCountryNames.convertNameToISO(any(String.class))).willThrow(IllegalArgumentException.class);
 
         // when
-        fxRobot.clickOn("#addDeleteLocale");
         fxRobot.clickOn("#applyButton");
 
         // then
         Label errorLabel = fxRobot.lookup("#errorLabel").tryQueryAs(Label.class).get();
         assertThat(errorLabel.getText()).isEqualTo(ErrorMessages.WEATHER_API_TYPO_IN_ADDING_LOCATION);
     }
+
+    @Test
+    void whenArrayIndexOutOfBoundsExceptionLocationShouldNotBeAdded(FxRobot fxRobot) throws ApiException {
+        // given
+        given(convertingCountryNames.convertNameToISO(any(String.class))).willReturn("ISO code");
+        given(weatherClient.getCityInfo(any(String.class), any(String.class))).willThrow(ArrayIndexOutOfBoundsException.class);
+
+        // when
+        fxRobot.clickOn("#applyButton");
+
+        // then
+        verify(customLocations, never()).addLocation(any(), any(), any());
+        verify(customLocations, never()).saveLocationsToFile();
+    }
+
+    @Test
+    void whenArrayIndexOutOfBoundsExceptionThrownErrorLabelShouldHaveProperValue(FxRobot fxRobot) throws ApiException {
+        // given
+        given(convertingCountryNames.convertNameToISO(any(String.class))).willReturn("ISO code");
+        given(weatherClient.getCityInfo(any(String.class), any(String.class))).willThrow(ArrayIndexOutOfBoundsException.class);
+
+        // when
+        fxRobot.clickOn("#applyButton");
+
+        // then
+        Label errorLabel = fxRobot.lookup("#errorLabel").tryQueryAs(Label.class).get();
+        assertThat(errorLabel.getText()).isEqualTo(ErrorMessages.WEATHER_API_TYPO_IN_ADDING_CITY);
+    }
+
+    @Test
+    void whenApiExceptionLocationShouldNotBeAdded(FxRobot fxRobot) throws ApiException {
+        // given
+        given(convertingCountryNames.convertNameToISO(any(String.class))).willReturn("ISO code");
+        given(weatherClient.getCityInfo(any(String.class), any(String.class))).willThrow(ApiException.class);
+
+        // when
+        fxRobot.clickOn("#applyButton");
+
+        // then
+        verify(customLocations, never()).addLocation(any(), any(), any());
+        verify(customLocations, never()).saveLocationsToFile();
+    }
+
+    @Test
+    void whenApiExceptionThrownErrorLabelShouldHaveProperValue(FxRobot fxRobot) throws ApiException {
+        // given
+        given(convertingCountryNames.convertNameToISO(any(String.class))).willReturn("ISO code");
+        given(weatherClient.getCityInfo(any(String.class), any(String.class))).willThrow(ApiException.class);
+
+        // when
+        fxRobot.clickOn("#applyButton");
+
+        // then
+        Label errorLabel = fxRobot.lookup("#errorLabel").tryQueryAs(Label.class).get();
+        assertThat(errorLabel.getText()).isEqualTo(ErrorMessages.WEATHER_API_COULD_NOT_LOAD_CITY_DATA);
+    }
+
+//    @Test
+//    void dasldskfjlsdfk(FxRobot fxRobot) {
+//        // given
+//        // when
+//        fxRobot.clickOn("#countryTextField");
+//        fxRobot.write("Japan");
+//        fxRobot.clickOn("#cityTextField");
+//        fxRobot.write("Nagoya");
+//        TreeView treeView = fxRobot.lookup("#tableView").tryQueryAs(TreeView.class).get();
+//        ObservableList<TreeItem<String>> countryTreeItem = treeView.getRoot().getChildren();
+//    }
 }

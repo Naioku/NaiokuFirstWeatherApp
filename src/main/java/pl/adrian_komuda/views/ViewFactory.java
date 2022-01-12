@@ -181,9 +181,9 @@ public class ViewFactory {
         }
     }
 
-    public static void switchCenterViewToAddDeleteLocaleView() {
+    public static void switchCenterViewToAddDeleteLocationView() {
         BaseController addDeleteLocaleViewController = new AddDeleteLocationViewController(
-                "AddDeleteLocaleView",
+                "AddDeleteLocationView",
                 convertingCountryNames,
                 weatherClient,
                 customLocations);

@@ -27,7 +27,7 @@ public class MainViewController extends BaseController {
 
     @FXML
     void leftPanelButtonAddDeleteLocaleOnAction() {
-        ViewFactory.switchCenterViewToAddDeleteLocaleView();
+        ViewFactory.switchCenterViewToAddDeleteLocationView();
     }
 
     @FXML
