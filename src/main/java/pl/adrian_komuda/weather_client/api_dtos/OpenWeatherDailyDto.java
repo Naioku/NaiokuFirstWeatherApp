@@ -21,12 +21,12 @@ public class OpenWeatherDailyDto {
     @JsonCreator
     public OpenWeatherDailyDto(
             @JsonProperty("dt") long dt,
-            @JsonProperty("temp")OpenWeatherDailyTempDto temp,
-            @JsonProperty("feels_like")OpenWeatherDailyFeelsLikeDto feels_like,
-            @JsonProperty("pressure")int pressure,
-            @JsonProperty("humidity")int humidity,
-            @JsonProperty("wind_speed")float wind_speed,
-            @JsonProperty("weather")OpenWeatherHourlyAndDailyWeatherDto[] weather
+            @JsonProperty("temp") OpenWeatherDailyTempDto temp,
+            @JsonProperty("feels_like") OpenWeatherDailyFeelsLikeDto feels_like,
+            @JsonProperty("pressure") int pressure,
+            @JsonProperty("humidity") int humidity,
+            @JsonProperty("wind_speed") float wind_speed,
+            @JsonProperty("weather") OpenWeatherHourlyAndDailyWeatherDto[] weather
     ) {
         this.dt = dt;
         this.temp = temp;

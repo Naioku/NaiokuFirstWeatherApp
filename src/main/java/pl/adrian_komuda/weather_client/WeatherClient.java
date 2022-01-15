@@ -14,9 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherClient {
-    private final RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
+    private ObjectMapper objectMapper = new ObjectMapper();
     private final static String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
     private final static String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
+
+    public WeatherClient() {
+    }
+
+    public WeatherClient(RestTemplate restTemplate, ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+    }
 
     private City lastCheckedCity;
 
@@ -35,7 +44,7 @@ public class WeatherClient {
         WeatherDto weatherDto;
 
         try {
-            OpenWeatherWeatherDto openWeatherWeatherDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherWeatherDto.class);
+            OpenWeatherWeatherDto openWeatherWeatherDto = objectMapper.readValue(jsonResponse, OpenWeatherWeatherDto.class);
             weatherDto = new WeatherDto(
                     openWeatherWeatherDto.getTemp(),
                     openWeatherWeatherDto.getPressure(),
@@ -65,6 +74,7 @@ public class WeatherClient {
 
         try {
             OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
+            System.out.println(openWeatherOneCallDto);
             for (OpenWeatherHourlyDto openWeatherDto : openWeatherOneCallDto.getHourly()) {
                 HourlyWeatherDto hourlyWeatherDto = new HourlyWeatherDto(
                         openWeatherDto.getDt(),
@@ -158,4 +168,6 @@ public class WeatherClient {
     public ImageView getWeatherIcon(String code) {
         return new ImageView(new Image("http://openweathermap.org/img/wn/" + code + "@2x.png"));
     }
+
+
 }
