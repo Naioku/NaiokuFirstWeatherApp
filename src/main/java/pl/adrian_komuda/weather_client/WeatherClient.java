@@ -73,8 +73,7 @@ public class WeatherClient {
         List<HourlyWeatherDto> hourlyWeatherDtos = new ArrayList<>();
 
         try {
-            OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
-            System.out.println(openWeatherOneCallDto);
+            OpenWeatherOneCallDto openWeatherOneCallDto = objectMapper.readValue(jsonResponse, OpenWeatherOneCallDto.class);
             for (OpenWeatherHourlyDto openWeatherDto : openWeatherOneCallDto.getHourly()) {
                 HourlyWeatherDto hourlyWeatherDto = new HourlyWeatherDto(
                         openWeatherDto.getDt(),
@@ -109,7 +108,7 @@ public class WeatherClient {
         List<WeeklyForecastDto> weeklyForecastDtoList = new ArrayList<>();
 
         try {
-            OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
+            OpenWeatherOneCallDto openWeatherOneCallDto = objectMapper.readValue(jsonResponse, OpenWeatherOneCallDto.class);
             for (OpenWeatherDailyDto openWeatherDto : openWeatherOneCallDto.getDaily()) {
                 WeeklyForecastDto weeklyForecastDto = new WeeklyForecastDto(
                         openWeatherDto.getDt(), openWeatherOneCallDto.getTimezone_offset(),
@@ -150,7 +149,8 @@ public class WeatherClient {
         City cityObj;
 
         try {
-            OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
+            OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = objectMapper.readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
+            System.out.println(openWeatherGeocodingCityDto);
             cityObj = new SpecificCity(
                     city,
                     openWeatherGeocodingCityDto[0].getLat(),

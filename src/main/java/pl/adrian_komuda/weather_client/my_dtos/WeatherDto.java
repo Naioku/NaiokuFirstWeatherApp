@@ -3,6 +3,8 @@ package pl.adrian_komuda.weather_client.my_dtos;
 import pl.adrian_komuda.utilities.HelpingMethods;
 import pl.adrian_komuda.utilities.UnitsSymbols;
 
+import java.util.Objects;
+
 public class WeatherDto {
     private final int temperature;
     private final int pressure;
@@ -60,5 +62,18 @@ public class WeatherDto {
                 "\nPressure: " + pressure + " " + pressureUnit +
                 "\nHumidity: " + humidity + " " + humidityUnit +
                 "\nWind speed: " + windSpeed + " " + windSpeedUnit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WeatherDto that = (WeatherDto) o;
+        return temperature == that.temperature && pressure == that.pressure && humidity == that.humidity && windSpeed == that.windSpeed && Objects.equals(temperatureUnit, that.temperatureUnit) && Objects.equals(pressureUnit, that.pressureUnit) && Objects.equals(humidityUnit, that.humidityUnit) && Objects.equals(windSpeedUnit, that.windSpeedUnit);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(temperature, pressure, humidity, windSpeed, temperatureUnit, pressureUnit, humidityUnit, windSpeedUnit);
     }
 }
