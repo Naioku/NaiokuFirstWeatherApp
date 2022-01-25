@@ -16,9 +16,9 @@ public class OpenWeatherOneCallDto {
 
     @JsonCreator
     public OpenWeatherOneCallDto(
-            @JsonProperty("hourly")OpenWeatherHourlyDto[] hourly,
-            @JsonProperty("timezone_offset")long timezone_offset,
-            @JsonProperty("daily")OpenWeatherDailyDto[] daily
+            @JsonProperty("hourly") OpenWeatherHourlyDto[] hourly,
+            @JsonProperty("timezone_offset") long timezone_offset,
+            @JsonProperty("daily") OpenWeatherDailyDto[] daily
     ) {
         this.hourly = hourly;
         this.timezone_offset = timezone_offset;

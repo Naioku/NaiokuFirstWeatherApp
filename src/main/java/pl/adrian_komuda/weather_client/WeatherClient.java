@@ -14,11 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherClient {
-    private final RestTemplate restTemplate = new RestTemplate();
+
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+
     private final static String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
     private final static String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
 
     private City lastCheckedCity;
+
+    public WeatherClient(RestTemplate restTemplate, ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+    }
 
     public City getLastCheckedCity() {
         return lastCheckedCity;
@@ -35,7 +43,7 @@ public class WeatherClient {
         WeatherDto weatherDto;
 
         try {
-            OpenWeatherWeatherDto openWeatherWeatherDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherWeatherDto.class);
+            OpenWeatherWeatherDto openWeatherWeatherDto = objectMapper.readValue(jsonResponse, OpenWeatherWeatherDto.class);
             weatherDto = new WeatherDto(
                     openWeatherWeatherDto.getTemp(),
                     openWeatherWeatherDto.getPressure(),
@@ -64,7 +72,7 @@ public class WeatherClient {
         List<HourlyWeatherDto> hourlyWeatherDtos = new ArrayList<>();
 
         try {
-            OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
+            OpenWeatherOneCallDto openWeatherOneCallDto = objectMapper.readValue(jsonResponse, OpenWeatherOneCallDto.class);
             for (OpenWeatherHourlyDto openWeatherDto : openWeatherOneCallDto.getHourly()) {
                 HourlyWeatherDto hourlyWeatherDto = new HourlyWeatherDto(
                         openWeatherDto.getDt(),
@@ -99,7 +107,7 @@ public class WeatherClient {
         List<WeeklyForecastDto> weeklyForecastDtoList = new ArrayList<>();
 
         try {
-            OpenWeatherOneCallDto openWeatherOneCallDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherOneCallDto.class);
+            OpenWeatherOneCallDto openWeatherOneCallDto = objectMapper.readValue(jsonResponse, OpenWeatherOneCallDto.class);
             for (OpenWeatherDailyDto openWeatherDto : openWeatherOneCallDto.getDaily()) {
                 WeeklyForecastDto weeklyForecastDto = new WeeklyForecastDto(
                         openWeatherDto.getDt(), openWeatherOneCallDto.getTimezone_offset(),
@@ -140,14 +148,13 @@ public class WeatherClient {
         City cityObj;
 
         try {
-            OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = new ObjectMapper().readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
+            OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = objectMapper.readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
             cityObj = new SpecificCity(
                     city,
                     openWeatherGeocodingCityDto[0].getLat(),
                     openWeatherGeocodingCityDto[0].getLon()
             );
         } catch (JsonProcessingException e) {
-            System.out.println("Error in converting json to object!");
             e.printStackTrace();
             throw new ApiException();
         }
@@ -158,4 +165,6 @@ public class WeatherClient {
     public ImageView getWeatherIcon(String code) {
         return new ImageView(new Image("http://openweathermap.org/img/wn/" + code + "@2x.png"));
     }
+
+
 }

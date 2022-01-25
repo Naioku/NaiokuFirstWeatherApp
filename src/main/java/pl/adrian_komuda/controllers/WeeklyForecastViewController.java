@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 public class WeeklyForecastViewController extends BaseController implements Initializable {
     private final WeatherClient weatherClient;
     private final ObservableList<String> countriesList = FXCollections.observableArrayList();
-    private final Map<String, ObservableList<City>> countiesCitiesMap = CustomLocations.getCountriesCitiesMap();
+    private final Map<String, ObservableList<City>> countiesCitiesMap = CustomLocations.getCustomLocations().getCountriesCitiesMap();
     private ChoiceBoxesHandler choiceBoxesHandler;
 
     @FXML

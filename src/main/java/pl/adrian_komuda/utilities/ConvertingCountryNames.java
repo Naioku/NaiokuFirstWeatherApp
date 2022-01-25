@@ -4,10 +4,17 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class ConvertingLocales {
+public class ConvertingCountryNames {
     Map<String, String> countries;
 
-    public ConvertingLocales() {
+    public ConvertingCountryNames() {
+        setupCountries();
+    }
+
+    /**
+     * If multi language mode provided, use it, when user changes the Locale.
+     */
+    public void setupCountries() {
         this.countries = new HashMap<>();
 
         for (String iso : Locale.getISOCountries()) {
