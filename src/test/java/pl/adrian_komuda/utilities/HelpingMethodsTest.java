@@ -1,6 +1,7 @@
 package pl.adrian_komuda.utilities;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -14,10 +15,11 @@ class HelpingMethodsTest {
         Locale.setDefault(new Locale("en"));
     }
 
-    /**
-     * Format HH:mm
+    /*
+     * Format HH:mm //I wonder if those comments are necessary
      * Timezone offset not included
      */
+    @Tag("MyLogic")
     @Test
     void givenUNIXSecondsShouldReturnHourInString() {
         // given
@@ -30,10 +32,11 @@ class HelpingMethodsTest {
         assertThat(result).isEqualTo("09:06");
     }
 
-    /**
+    /*
      * Format MM.dd (EEE)
      * Timezone offset not included
      */
+    @Tag("MyLogic")
     @Test
     void givenUNIXSecondsShouldReturnDateInString() {
         // given
@@ -46,10 +49,11 @@ class HelpingMethodsTest {
         assertThat(result).isEqualTo("12.13 (Mon)");
     }
 
+    @Tag("MyLogic")
     @Test
     void givenVelocityInMetersPerSecondShouldReturnVelocityInKilometersPerHour() {
         // given
-        float velocity = 10;
+        float velocity = 10; //unused variable
 
         // when
         float result = HelpingMethods.mPerSecToKmPerH(10);

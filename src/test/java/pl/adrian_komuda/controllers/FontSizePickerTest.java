@@ -15,12 +15,11 @@ import pl.adrian_komuda.App;
 import pl.adrian_komuda.views.ViewFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
 class FontSizePickerTest {
 
-    Slider slider;
+    private Slider slider;
 
     @BeforeEach
     public void runAppToTests(FxRobot fxRobot) throws Exception {

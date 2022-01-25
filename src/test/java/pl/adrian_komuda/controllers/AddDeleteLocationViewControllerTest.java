@@ -1,10 +1,6 @@
 package pl.adrian_komuda.controllers;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import org.junit.jupiter.api.AfterEach;
@@ -29,12 +25,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(ApplicationExtension.class)
+@ExtendWith(ApplicationExtension.class) // optimise imports
 class AddDeleteLocationViewControllerTest {
 
-    ConvertingCountryNames convertingCountryNames = mock(ConvertingCountryNames.class);
-    WeatherClient weatherClient = mock(WeatherClient.class);
-    CustomLocations customLocations = mock(CustomLocations.class);
+    private final ConvertingCountryNames convertingCountryNames = mock(ConvertingCountryNames.class);
+    private final WeatherClient weatherClient = mock(WeatherClient.class);
+    private final CustomLocations customLocations = mock(CustomLocations.class);
 
     @BeforeEach
     public void runAppToTests(FxRobot fxRobot) throws Exception {
@@ -168,16 +164,4 @@ class AddDeleteLocationViewControllerTest {
         Label errorLabel = fxRobot.lookup("#errorLabel").tryQueryAs(Label.class).get();
         assertThat(errorLabel.getText()).isEqualTo(ErrorMessages.WEATHER_API_COULD_NOT_LOAD_CITY_DATA);
     }
-
-//    @Test
-//    void dasldskfjlsdfk(FxRobot fxRobot) {
-//        // given
-//        // when
-//        fxRobot.clickOn("#countryTextField");
-//        fxRobot.write("Japan");
-//        fxRobot.clickOn("#cityTextField");
-//        fxRobot.write("Nagoya");
-//        TreeView treeView = fxRobot.lookup("#tableView").tryQueryAs(TreeView.class).get();
-//        ObservableList<TreeItem<String>> countryTreeItem = treeView.getRoot().getChildren();
-//    }
 }

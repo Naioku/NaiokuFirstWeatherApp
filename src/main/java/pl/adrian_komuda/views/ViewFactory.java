@@ -1,5 +1,6 @@
 package pl.adrian_komuda.views;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -13,6 +14,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.springframework.web.client.RestTemplate;
 import pl.adrian_komuda.App;
 import pl.adrian_komuda.controllers.*;
 import pl.adrian_komuda.controllers.persistence.ColorThemeToFile;
@@ -33,29 +35,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewFactory {
+    private static RestTemplate REST_TEMPLATE = new RestTemplate();
+    private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private static final int MAIN_WINDOW_HEIGHT = 850;
     private static final int MAIN_WINDOW_WIDTH = 1375;
 
     private static final BorderPane MAIN_VIEW = (BorderPane) loadFXML(new MainViewController("MainView"));
     private static final Scene SCENE = new Scene(MAIN_VIEW);
 
-    private static final WeatherClient WEATHER_CLIENT_HOME_PANEL = new WeatherClient();
-    private static final WeatherClient WEATHER_CLIENT_ANOTHER_PANEL = new WeatherClient();
+    private static final WeatherClient WEATHER_CLIENT_HOME_PANEL = new WeatherClient(REST_TEMPLATE, OBJECT_MAPPER);
+    private static final WeatherClient WEATHER_CLIENT_ANOTHER_PANEL = new WeatherClient(REST_TEMPLATE, OBJECT_MAPPER);
 
     private static ColorTheme COLOR_THEME;
     private static FontSize FONT_SIZE;
     private static final List<Stage> ACTIVE_STAGES = new ArrayList<>();
 
-    private static ConvertingCountryNames convertingCountryNames = new ConvertingCountryNames();
-    private static WeatherClient weatherClient = new WeatherClient();
-    private static CustomLocations customLocations = CustomLocations.getCustomLocations();
+    private static ConvertingCountryNames CONVERTING_COUNTRY_NAMES = new ConvertingCountryNames();
+    private static WeatherClient WEATHER_CLIENT_FOR_ADD_DELETE_LOCATION = new WeatherClient(REST_TEMPLATE, OBJECT_MAPPER);
+    private static CustomLocations CUSTOM_LOCATIONS = CustomLocations.getCustomLocations();
 
     public static void init(ConvertingCountryNames convertingCountryNames,
                             WeatherClient weatherClient,
                             CustomLocations customLocations) {
-        ViewFactory.convertingCountryNames = convertingCountryNames;
-        ViewFactory.weatherClient = weatherClient;
-        ViewFactory.customLocations = customLocations;
+        ViewFactory.CONVERTING_COUNTRY_NAMES = convertingCountryNames;
+        ViewFactory.WEATHER_CLIENT_FOR_ADD_DELETE_LOCATION = weatherClient;
+        ViewFactory.CUSTOM_LOCATIONS = customLocations;
     }
     static {
         FontSize fontSizeTemp;
@@ -184,9 +189,9 @@ public class ViewFactory {
     public static void switchCenterViewToAddDeleteLocationView() {
         BaseController addDeleteLocaleViewController = new AddDeleteLocationViewController(
                 "AddDeleteLocationView",
-                convertingCountryNames,
-                weatherClient,
-                customLocations);
+                CONVERTING_COUNTRY_NAMES,
+                WEATHER_CLIENT_FOR_ADD_DELETE_LOCATION,
+                CUSTOM_LOCATIONS);
         MAIN_VIEW.setCenter(loadFXML(addDeleteLocaleViewController));
     }
 

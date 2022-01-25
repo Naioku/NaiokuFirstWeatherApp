@@ -1,6 +1,7 @@
 package pl.adrian_komuda.utilities;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -8,11 +9,12 @@ import java.util.Locale;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-/**
+/*
  * Polish localization -> names of country in Polish language
  */
 class ConvertingCountryNamesTest {
 
+    // private
     ConvertingCountryNames convertingCountryNames;
 
     @BeforeEach
@@ -21,12 +23,13 @@ class ConvertingCountryNamesTest {
         convertingCountryNames = new ConvertingCountryNames();
     }
 
+    @Tag("MyLogic")
     @Test
     void givenLocalNameInProperLocalizationShouldReturnISOName() {
         // given
         // convertingCountryNames
         String countryName = "Japan";
-        String CountryISOName = "JP";
+        String CountryISOName = "JP"; //countryISOName
 
         // when
         String result = convertingCountryNames.convertNameToISO(countryName);
@@ -35,6 +38,7 @@ class ConvertingCountryNamesTest {
         assertThat(result).isEqualTo(CountryISOName);
     }
 
+    @Tag("MyLogic")
     @Test
     void givenWrongLocaleNameShouldReturnAnError() {
         // given

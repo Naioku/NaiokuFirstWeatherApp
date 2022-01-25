@@ -2,7 +2,6 @@ package pl.adrian_komuda.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import org.junit.jupiter.api.AfterEach;
@@ -18,12 +17,11 @@ import pl.adrian_komuda.model.ColorTheme;
 import pl.adrian_komuda.views.ViewFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
 class ColorThemePickerTest {
 
-    ChoiceBox<ColorTheme> colorThemeChoiceBox;
+    private ChoiceBox<ColorTheme> colorThemeChoiceBox;
 
     @BeforeEach
     public void runAppToTests(FxRobot fxRobot) throws Exception {
@@ -44,13 +42,13 @@ class ColorThemePickerTest {
     }
 
     @Test
-    void afterSettingUpColorThemePickerItemsInListShouldBeConjugatedWithColorThemeEnumValues(FxRobot fxRobot) {
+    void afterSettingUpColorThemePickerItemsInListShouldBeConjugatedWithColorThemeEnumValues(FxRobot fxRobot) { //no action in that test, but I'm assuming this is test of default so thats OK
         // then
         assertThat(colorThemeChoiceBox.getItems()).isEqualTo(FXCollections.observableArrayList(ColorTheme.values()));
     }
 
     @Test
-    void afterSettingUpColorThemePickerValueShouldBeConjugatedWithViewFactoryValue(FxRobot fxRobot) {
+    void afterSettingUpColorThemePickerValueShouldBeConjugatedWithViewFactoryValue(FxRobot fxRobot) { //no action in that test, but I'm assuming this is test of default so thats OK
         // then
         assertThat(colorThemeChoiceBox.getValue()).isEqualTo(ViewFactory.getColorTheme());
     }

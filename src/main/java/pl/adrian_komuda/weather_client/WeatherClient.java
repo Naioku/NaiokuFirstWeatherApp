@@ -14,20 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherClient {
-    private RestTemplate restTemplate = new RestTemplate();
-    private ObjectMapper objectMapper = new ObjectMapper();
+
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+
     private final static String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
     private final static String GEO_URL = "http://api.openweathermap.org/geo/1.0/";
 
-    public WeatherClient() {
-    }
+    private City lastCheckedCity;
 
     public WeatherClient(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
-
-    private City lastCheckedCity;
 
     public City getLastCheckedCity() {
         return lastCheckedCity;
@@ -150,14 +149,12 @@ public class WeatherClient {
 
         try {
             OpenWeatherGeocodingCityDto[] openWeatherGeocodingCityDto = objectMapper.readValue(jsonResponse, OpenWeatherGeocodingCityDto[].class);
-            System.out.println(openWeatherGeocodingCityDto);
             cityObj = new SpecificCity(
                     city,
                     openWeatherGeocodingCityDto[0].getLat(),
                     openWeatherGeocodingCityDto[0].getLon()
             );
         } catch (JsonProcessingException e) {
-            System.out.println("Error in converting json to object!");
             e.printStackTrace();
             throw new ApiException();
         }

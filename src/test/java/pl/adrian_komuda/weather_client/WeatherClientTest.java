@@ -2,6 +2,7 @@ package pl.adrian_komuda.weather_client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 import pl.adrian_komuda.utilities.custom_exceptions.ApiException;
@@ -11,72 +12,78 @@ import pl.adrian_komuda.weather_client.my_dtos.*;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 class WeatherClientTest {
 
-    RestTemplate restTemplate = mock(RestTemplate.class);
-    ObjectMapper objectMapper = mock(ObjectMapper.class);
-    City city = new SpecificCity("Nagoya", 0F, 0F);
+    private RestTemplate restTemplate = mock(RestTemplate.class);
+    private ObjectMapper objectMapper = mock(ObjectMapper.class);
+    private final static City CITY = new SpecificCity("Nagoya", 0F, 0F);
 
-    WeatherClient weatherClient = new WeatherClient(restTemplate, objectMapper);
+    private WeatherClient weatherClient = new WeatherClient(restTemplate, objectMapper);
 
+    @Tag("MyLogic")
     @Test
     void whenNoExceptionOccurredGetCurrentWeatherDataShouldReturnProperWeatherDto() throws JsonProcessingException, ApiException {
         // given
-        OpenWeatherWeatherDto openWeatherWeatherDto = mock(OpenWeatherWeatherDto.class);
+        OpenWeatherWeatherDto openWeatherWeatherDto = getOpenWeatherWeatherDto();
 
         given(restTemplate.getForObject(any(String.class), any(Class.class), any(City.class), any(String.class))).willReturn(StaticData.PROPER_JSON_STRING);
-        given(openWeatherWeatherDto.getTemp()).willReturn(StaticData.TEMPERATURE);
-        given(openWeatherWeatherDto.getPressure()).willReturn(StaticData.PRESSURE);
-        given(openWeatherWeatherDto.getHumidity()).willReturn(StaticData.HUMIDITY);
-        given(openWeatherWeatherDto.getSpeed()).willReturn(StaticData.WIND_SPEED);
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherWeatherDto.class)).willReturn(openWeatherWeatherDto);
 
         WeatherDto properAnswer = new WeatherDto(StaticData.TEMPERATURE, StaticData.PRESSURE, StaticData.HUMIDITY, StaticData.WIND_SPEED);
 
         // when
-        WeatherDto response = weatherClient.getCurrentWeatherData(city);
+        WeatherDto response = weatherClient.getCurrentWeatherData(CITY);
 
         // then
         assertThat(response).isEqualTo(properAnswer);
     }
 
+    private OpenWeatherWeatherDto getOpenWeatherWeatherDto() {
+        OpenWeatherWeatherDto openWeatherWeatherDto = mock(OpenWeatherWeatherDto.class);
+        given(openWeatherWeatherDto.getTemp()).willReturn(StaticData.TEMPERATURE);
+        given(openWeatherWeatherDto.getPressure()).willReturn(StaticData.PRESSURE);
+        given(openWeatherWeatherDto.getHumidity()).willReturn(StaticData.HUMIDITY);
+        given(openWeatherWeatherDto.getSpeed()).willReturn(StaticData.WIND_SPEED);
+
+        return openWeatherWeatherDto;
+    }
+
+    @Tag("MyLogic")
     @Test
-    void whenJsonProcessingExceptionIsThrownInGetCurrentWeatherDataApiExceptionShouldBeThrown() throws JsonProcessingException, ApiException {
+    void whenJsonProcessingExceptionIsThrownInGetCurrentWeatherDataApiExceptionShouldBeThrown() throws JsonProcessingException {
         // given
         given(restTemplate.getForObject(any(String.class), any(Class.class), any(City.class), any(String.class))).willReturn(StaticData.PROPER_JSON_STRING);
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherWeatherDto.class)).willThrow(JsonProcessingException.class);
 
         // when
         // then
-        assertThrows(ApiException.class, () ->  weatherClient.getCurrentWeatherData(city));
+        assertThrows(ApiException.class, () ->  weatherClient.getCurrentWeatherData(CITY));
     }
 
+    @Tag("MyLogic")
     @Test
     void afterGetCurrentWeatherDataLastCheckedCityFieldShouldBeExactlyForWhichYouCheckedWeather() throws JsonProcessingException, ApiException {
         // given
-        OpenWeatherWeatherDto openWeatherWeatherDto = mock(OpenWeatherWeatherDto.class);
+        OpenWeatherWeatherDto openWeatherWeatherDto = getOpenWeatherWeatherDto();
 
         given(restTemplate.getForObject(any(String.class), any(Class.class), any(City.class), any(String.class))).willReturn(StaticData.PROPER_JSON_STRING);
-        given(openWeatherWeatherDto.getTemp()).willReturn(StaticData.TEMPERATURE);
-        given(openWeatherWeatherDto.getPressure()).willReturn(StaticData.PRESSURE);
-        given(openWeatherWeatherDto.getHumidity()).willReturn(StaticData.HUMIDITY);
-        given(openWeatherWeatherDto.getSpeed()).willReturn(StaticData.WIND_SPEED);
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherWeatherDto.class)).willReturn(openWeatherWeatherDto);
 
         WeatherDto properAnswer = new WeatherDto(StaticData.TEMPERATURE, StaticData.PRESSURE, StaticData.HUMIDITY, StaticData.WIND_SPEED);
 
         // when
-        WeatherDto response = weatherClient.getCurrentWeatherData(city);
+        WeatherDto response = weatherClient.getCurrentWeatherData(CITY);
 
         // then
         assertThat(response).isEqualTo(properAnswer);
     }
 
+    @Tag("MyLogic")
     @Test
     void whenNoExceptionOccurredGetHourlyWeatherForecastDataShouldReturnProperWeatherDto() throws JsonProcessingException, ApiException {
         // given
@@ -89,7 +96,7 @@ class WeatherClientTest {
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherOneCallDto.class)).willReturn(openWeatherOneCallDto);
 
         // when
-        List<HourlyWeatherDto> response = weatherClient.getHourlyWeatherForecastData(city);
+        List<HourlyWeatherDto> response = weatherClient.getHourlyWeatherForecastData(CITY);
 
         // then
         assertThat(response.get(0).getDateTime()).isEqualTo(HourlyWeatherDtoStaticData.UNIX_DATE_TIME_1);
@@ -123,17 +130,19 @@ class WeatherClientTest {
         return new OpenWeatherHourlyDto[]{openWeatherHourlyDto1, openWeatherHourlyDto2};
     }
 
+    @Tag("MyLogic")
     @Test
-    void whenJsonProcessingExceptionIsThrownInGetHourlyWeatherForecastDataApiExceptionShouldBeThrown() throws JsonProcessingException, ApiException {
+    void whenJsonProcessingExceptionIsThrownInGetHourlyWeatherForecastDataApiExceptionShouldBeThrown() throws JsonProcessingException {
         // given
         given(restTemplate.getForObject(any(String.class), any(Class.class), any(float.class), any(float.class), any(String.class))).willReturn(StaticData.PROPER_JSON_STRING);
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherOneCallDto.class)).willThrow(JsonProcessingException.class);
 
         // when
         // then
-        assertThrows(ApiException.class, () ->  weatherClient.getHourlyWeatherForecastData(city));
+        assertThrows(ApiException.class, () ->  weatherClient.getHourlyWeatherForecastData(CITY));
     }
 
+    @Tag("MyLogic")
     @Test
     void afterGetHourlyWeatherForecastDataLastCheckedCityFieldShouldBeExactlyForWhichYouCheckedWeather() throws ApiException, JsonProcessingException {
         // given
@@ -145,15 +154,16 @@ class WeatherClientTest {
 
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherOneCallDto.class)).willReturn(openWeatherOneCallDto);
 
-        City properAnswer = city;
+        City properAnswer = CITY;
 
         // when
-        weatherClient.getHourlyWeatherForecastData(city);
+        weatherClient.getHourlyWeatherForecastData(CITY);
 
         // then
         assertThat(weatherClient.getLastCheckedCity()).isEqualTo(properAnswer);
     }
 
+    @Tag("MyLogic")
     @Test
     void whenNoExceptionOccurredGetWeeklyWeatherForecastDataShouldReturnProperWeatherDto() throws JsonProcessingException, ApiException {
         // given
@@ -166,7 +176,7 @@ class WeatherClientTest {
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherOneCallDto.class)).willReturn(openWeatherOneCallDto);
 
         // when
-        List<WeeklyForecastDto> response = weatherClient.getWeeklyWeatherForecastData(city);
+        List<WeeklyForecastDto> response = weatherClient.getWeeklyWeatherForecastData(CITY);
 
         // then
         assertThat(response.get(0).getDateTime()).isEqualTo(OpenWeatherDailyDtoStaticData.UNIX_DATE_TIME_1);
@@ -229,17 +239,19 @@ class WeatherClientTest {
         return new OpenWeatherDailyDto[]{openWeatherDailyDto1, openWeatherDailyDto2};
     }
 
+    @Tag("MyLogic")
     @Test
-    void whenJsonProcessingExceptionIsThrownInGetWeeklyWeatherForecastDataApiExceptionShouldBeThrown() throws JsonProcessingException, ApiException {
+    void whenJsonProcessingExceptionIsThrownInGetWeeklyWeatherForecastDataApiExceptionShouldBeThrown() throws JsonProcessingException {
         // given
         given(restTemplate.getForObject(any(String.class), any(Class.class), any(float.class), any(float.class), any(String.class))).willReturn(StaticData.PROPER_JSON_STRING);
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherOneCallDto.class)).willThrow(JsonProcessingException.class);
 
         // when
         // then
-        assertThrows(ApiException.class, () ->  weatherClient.getWeeklyWeatherForecastData(city));
+        assertThrows(ApiException.class, () ->  weatherClient.getWeeklyWeatherForecastData(CITY));
     }
 
+    @Tag("MyLogic")
     @Test
     void afterGetWeeklyWeatherForecastDataLastCheckedCityFieldShouldBeExactlyForWhichYouCheckedWeather() throws ApiException, JsonProcessingException {
         // given
@@ -251,15 +263,16 @@ class WeatherClientTest {
 
         given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherOneCallDto.class)).willReturn(openWeatherOneCallDto);
 
-        City properAnswer = city;
+        City properAnswer = CITY;
 
         // when
-        weatherClient.getWeeklyWeatherForecastData(city);
+        weatherClient.getWeeklyWeatherForecastData(CITY);
 
         // then
         assertThat(weatherClient.getLastCheckedCity()).isEqualTo(properAnswer);
     }
 
+    @Tag("MyLogic")
     @Test
     void whenNoExceptionOccurredGetCityInfoShouldReturnProperCityObj() throws JsonProcessingException, ApiException {
         // given
@@ -282,5 +295,17 @@ class WeatherClientTest {
         given(openWeatherGeocodingCityDto.getLon()).willReturn(30F);
 
         return new OpenWeatherGeocodingCityDto[]{openWeatherGeocodingCityDto};
+    }
+
+    @Tag("MyLogic")
+    @Test
+    void whenJsonProcessingExceptionIsThrownInGetCityInfoApiExceptionShouldBeThrown() throws JsonProcessingException, ApiException {
+        // given
+        given(restTemplate.getForObject(any(String.class), any(Class.class), any(String.class), any(String.class), any(String.class))).willReturn(StaticData.PROPER_JSON_STRING);
+        given(objectMapper.readValue(StaticData.PROPER_JSON_STRING, OpenWeatherGeocodingCityDto[].class)).willThrow(JsonProcessingException.class);
+
+        // when
+        // then
+        assertThrows(ApiException.class, () ->  weatherClient.getCityInfo("Name", "ISOCode"));
     }
 }

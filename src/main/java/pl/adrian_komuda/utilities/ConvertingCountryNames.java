@@ -12,7 +12,7 @@ public class ConvertingCountryNames {
     }
 
     /**
-     * Use it, when user changes the Locale.
+     * If multi language mode provided, use it, when user changes the Locale.
      */
     public void setupCountries() {
         this.countries = new HashMap<>();
